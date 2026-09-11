@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import useStore from '../../store/useStore';
 import MultiSelect from '../ui/MultiSelect';
-import { limparNomeBase, limparNomeReal, CHART_COLORS } from '../../lib/dataUtils';
+import { CHART_COLORS } from '../../lib/dataUtils';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -87,7 +87,6 @@ export default function Tab3Familias() {
 
   // Gráfico 2: Falhas por comp/tag selecionado
   const falhasDisponiveis = useMemo(() => {
-    const isGeral = selFalhaComp.includes('GERAL') || selFalhaComp.length === 0;
     const fc = {};
 
     selFalhaComp.forEach(v => {
