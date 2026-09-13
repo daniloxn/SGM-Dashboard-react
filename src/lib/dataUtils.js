@@ -294,3 +294,207 @@ export const CHART_COLORS = [
   '#64748b', '#d946ef'
 ];
 
+/**
+ * Extrai um timestamp numérico seguro em milissegundos a partir de qualquer
+ * objeto de evento ou data/hora (ISO, BR, timestamp, objeto).
+ */
+export function getEventoTimestamp(ev) {
+  if (!ev) return 0;
+  if (typeof ev.timestamp === 'number' && !isNaN(ev.timestamp) && ev.timestamp > 0) {
+    return ev.timestamp;
+  }
+  const str = ev.dataHoraISO || ev.dataHora || ev.data;
+  if (!str) return 0;
+  if (typeof str === 'number' && !isNaN(str)) return str;
+
+  // Formato ISO ou parse direto pelo Date
+  const parsed = new Date(str).getTime();
+  if (!isNaN(parsed) && parsed > 0) return parsed;
+
+  // Formato brasileiro DD/MM/AAAA ou DD/MM/AAAA HH:mm
+  if (typeof str === 'string' && str.includes('/')) {
+    const [datePart, timePart] = str.split(' ');
+    const parts = datePart.split('/');
+    if (parts.length === 3) {
+      const d = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      const y = parseInt(parts[2], 10);
+      let h = 0, min = 0;
+      if (timePart && timePart.includes(':')) {
+        const [hStr, mStr] = timePart.split(':');
+        h = parseInt(hStr, 10) || 0;
+        min = parseInt(mStr, 10) || 0;
+      }
+      const dt = new Date(y < 100 ? 2000 + y : y, m - 1, d, h, min, 0);
+      if (!isNaN(dt.getTime())) return dt.getTime();
+    }
+  }
+
+  return 0;
+}
+
+/**
+ * Reconcilia um componente ordenando seu histórico estritamente por data/hora decrescente
+ * e definindo sua localização e sondaAtual baseadas na informação do evento mais recente.
+ */
+export function reconciliarComponente(comp) {
+  if (!comp) return comp;
+  const eventos = [...(comp.historico || [])];
+
+  // Ordena do mais recente para o mais antigo com desempate por prioridade de evento
+  const prioridadeEvento = {
+    'ajuste_manual': 4,
+    'entrou_sonda': 3,
+    'conclusao_manutencao': 2,
+    'saiu_sonda': 1
+  };
+
+  eventos.sort((a, b) => {
+    const timeA = getEventoTimestamp(a);
+    const timeB = getEventoTimestamp(b);
+    if (timeB !== timeA) return timeB - timeA;
+    // Desempate no mesmo minuto: prioridade do tipo de evento
+    return (prioridadeEvento[b.tipoEvento] || 0) - (prioridadeEvento[a.tipoEvento] || 0);
+  });
+
+  const ultimoEvento = eventos[0];
+  let localizacao = comp.localizacao || 'OFICINA_RESERVA';
+  let sondaAtual = comp.sondaAtual || null;
+
+  if (ultimoEvento) {
+    switch (ultimoEvento.tipoEvento) {
+      case 'entrou_sonda':
+        localizacao = 'SONDA';
+        sondaAtual = ultimoEvento.sonda || null;
+        break;
+      case 'saiu_sonda':
+        localizacao = 'OFICINA_MANUTENCAO';
+        sondaAtual = null;
+        break;
+      case 'conclusao_manutencao':
+        localizacao = 'OFICINA_RESERVA';
+        sondaAtual = null;
+        break;
+      case 'ajuste_manual':
+        localizacao = ultimoEvento.novaLocalizacao || (ultimoEvento.sonda ? 'SONDA' : 'OFICINA_RESERVA');
+        sondaAtual = localizacao === 'SONDA' ? (ultimoEvento.sonda || null) : null;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return {
+    ...comp,
+    localizacao,
+    sondaAtual,
+    historico: eventos
+  };
+}
+
+/**
+ * Reconcilia uma lista de componentes com base no histórico completo de O.S. da Oficina
+ * garantindo consistência temporal perfeita mesmo se ordens forem inseridas fora de ordem.
+ */
+export function sincronizarComponentesComOrdens(osOficinaList = [], componentesList = []) {
+  const map = new Map();
+
+  // 1. Inicializa o mapa com os componentes existentes, preservando ajustes manuais
+  componentesList.forEach(c => {
+    if (c && c.id) {
+      map.set(c.id, {
+        ...c,
+        historico: [...(c.historico || [])]
+      });
+    }
+  });
+
+  // 2. Extrai eventos de todas as O.S. da Oficina
+  osOficinaList.forEach(os => {
+    const compFamilia = limparNomeBase(os.componente || '');
+    if (!compFamilia || compFamilia === 'NÃO INFORMADO') return;
+
+    const ts = getEventoTimestamp(os);
+    const dataHoraIso = os.dataHoraISO || (os.data ? `${os.data}T${os.hora || '00:00'}:00` : new Date(ts).toISOString());
+
+    // Evento de saída (peça que saiu da sonda com defeito)
+    if (os.saiuNumero) {
+      const compId = `${compFamilia}_${String(os.saiuNumero).trim()}`.replace(/\s+/g, '_');
+      if (!map.has(compId)) {
+        map.set(compId, {
+          id: compId,
+          tipo: compFamilia,
+          numero: String(os.saiuNumero).trim(),
+          historico: []
+        });
+      }
+      const comp = map.get(compId);
+
+      // Checa se evento já existe para não duplicar
+      const jaExiste = comp.historico.some(e => e.osOficinaId === os.id && e.tipoEvento === 'saiu_sonda');
+      if (!jaExiste) {
+        comp.historico.push({
+          dataHora: dataHoraIso,
+          timestamp: ts,
+          tipoEvento: 'saiu_sonda',
+          sonda: os.sonda || '',
+          osOficinaId: os.id,
+          observacao: `Saiu da sonda ${os.sonda || '-'}. Problema: ${os.problema || 'Não especificado'}`
+        });
+      }
+
+      // Se a OS está concluída, gera também o evento de conclusão
+      if (os.status === 'concluida') {
+        const jaConcluido = comp.historico.some(e => e.osOficinaId === os.id && e.tipoEvento === 'conclusao_manutencao');
+        if (!jaConcluido) {
+          const dtConc = os.dataConclusao || dataHoraIso;
+          comp.historico.push({
+            dataHora: dtConc,
+            timestamp: getEventoTimestamp({ dataHora: dtConc }),
+            tipoEvento: 'conclusao_manutencao',
+            osOficinaId: os.id,
+            osSodep: os.osSodepAssociada || null,
+            observacao: os.osSodepAssociada
+              ? `Associada à O.S. SODEP ${os.osSodepAssociada}. Manutenção finalizada e componente disponível na reserva.`
+              : 'Manutenção concluída na oficina. Componente pronto na reserva.'
+          });
+        }
+      }
+    }
+
+    // Evento de entrada (peça instalada na sonda)
+    if (os.entrouNumero) {
+      const compId = `${compFamilia}_${String(os.entrouNumero).trim()}`.replace(/\s+/g, '_');
+      if (!map.has(compId)) {
+        map.set(compId, {
+          id: compId,
+          tipo: compFamilia,
+          numero: String(os.entrouNumero).trim(),
+          historico: []
+        });
+      }
+      const comp = map.get(compId);
+      const jaExiste = comp.historico.some(e => e.osOficinaId === os.id && e.tipoEvento === 'entrou_sonda');
+      if (!jaExiste) {
+        comp.historico.push({
+          dataHora: dataHoraIso,
+          timestamp: ts,
+          tipoEvento: 'entrou_sonda',
+          sonda: os.sonda || '',
+          osOficinaId: os.id,
+          observacao: `Instalado na sonda ${os.sonda || '-'} (Turno ${os.turno || '-'}, Turma ${os.turma || '-'})`
+        });
+      }
+    }
+  });
+
+  // 3. Reconcilia cada componente ordenando seu histórico e determinando a localização pela data mais recente
+  const listaReconciliada = [];
+  map.forEach(comp => {
+    listaReconciliada.push(reconciliarComponente(comp));
+  });
+
+  return listaReconciliada.sort((a, b) => (a.tipo || '').localeCompare(b.tipo || ''));
+}
+
+

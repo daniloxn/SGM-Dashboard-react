@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import useStore from '../../store/useStore';
 import MultiSelect from '../ui/MultiSelect';
+import ModalDetalhesDia from '../modals/ModalDetalhesDia';
 import { limparNomeBase, limparNomeReal, normalizarSonda, normalizarDataObj, CHART_COLORS } from '../../lib/dataUtils';
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -46,8 +47,11 @@ export default function Tab2Analitico() {
   const [selSondas, setSelSondas] = useState(['TODOS']);
   const [selPecas,  setSelPecas]  = useState(['GERAL']);
   const [selMec,    setSelMec]    = useState('TODOS');
+  const [modalDia,  setModalDia]  = useState({ aberto: false, dataIso: '', registros: [] });
 
   const isSingleMonth = selMeses.length === 1 && selMeses[0] !== 'TODOS';
+
+  const DIAS_SEMANA_NOMES = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 
   // Opções de peças e famílias
   const pecasOptions = useMemo(() => {
@@ -127,7 +131,7 @@ export default function Tab2Analitico() {
 
       const data = datasOrdenadas.map(d => {
         const dt = normalizarDataObj(d);
-        const row = { eixos: dt ? dt.labelBr : d };
+        const row = { eixos: dt ? dt.labelBr : d, dataIso: d };
         topFamiliasEvolucao.forEach(fam => {
           row[fam] = countsPorDia[d]?.[fam] || 0;
         });
@@ -187,6 +191,55 @@ export default function Tab2Analitico() {
         count
       }));
   }, [dadosFiltrados]);
+
+  // Agrupamento detalhado por data quando 1 único mês estiver filtrado
+  const resumoDiario = useMemo(() => {
+    if (!isSingleMonth) return [];
+
+    const mapaPorDia = {};
+    dadosFiltrados.forEach(r => {
+      const d = r['Data_Limpa'];
+      if (d && d !== 'S/D') {
+        if (!mapaPorDia[d]) {
+          mapaPorDia[d] = {
+            dataIso: d,
+            registros: [],
+            familias: {}
+          };
+        }
+        mapaPorDia[d].registros.push(r);
+        const fam = limparNomeBase(r['Componentes']);
+        if (fam) {
+          mapaPorDia[d].familias[fam] = (mapaPorDia[d].familias[fam] || 0) + 1;
+        }
+      }
+    });
+
+    const ordenadas = Object.keys(mapaPorDia).sort((a, b) => a.localeCompare(b));
+    return ordenadas.map(d => {
+      const dt = normalizarDataObj(d);
+      const item = mapaPorDia[d];
+      const topFam = Object.entries(item.familias)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([f, c]) => `${f} (${c})`)
+        .join(', ');
+
+      return {
+        dataIso: d,
+        dataLabel: dt ? `${String(dt.dia).padStart(2, '0')}/${String(dt.mes).padStart(2, '0')}/${dt.ano}` : d,
+        diaSemana: dt ? DIAS_SEMANA_NOMES[dt.diaSemanaIdx] : '',
+        total: item.registros.length,
+        registros: item.registros,
+        topFamiliasStr: topFam || '-'
+      };
+    });
+  }, [isSingleMonth, dadosFiltrados]);
+
+  function handleAbrirDia(dataIso, registros = null) {
+    const reg = registros || dadosFiltrados.filter(r => r['Data_Limpa'] === dataIso);
+    setModalDia({ aberto: true, dataIso, registros: reg });
+  }
 
   // Família mais afetada no momento
   const maisDanificada = rankingFamilias[0] || null;
@@ -285,27 +338,100 @@ export default function Tab2Analitico() {
         </div>
 
         {chartEvolucao.data && chartEvolucao.data.length > 0 ? (
-          <ResponsiveContainer width="100%" height={320}>
-            <LineChart data={chartEvolucao.data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="eixos" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ fontSize: '11px', color: '#94a3b8', paddingTop: '10px' }} />
-              {chartEvolucao.series.map((fam, i) => (
-                <Line
-                  key={fam}
-                  type="linear"
-                  dataKey={fam}
-                  name={fam}
-                  stroke={CHART_COLORS[i % CHART_COLORS.length]}
-                  strokeWidth={2.5}
-                  dot={{ r: chartEvolucao.isDiario ? 3 : 4 }}
-                  activeDot={{ r: 6 }}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
+          <div>
+            <ResponsiveContainer width="100%" height={320}>
+              <LineChart
+                data={chartEvolucao.data}
+                onClick={e => {
+                  if (chartEvolucao.isDiario && e && e.activePayload && e.activePayload.length > 0) {
+                    const rawData = e.activePayload[0].payload;
+                    if (rawData && rawData.dataIso) {
+                      handleAbrirDia(rawData.dataIso);
+                    }
+                  }
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="eixos" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend wrapperStyle={{ fontSize: '11px', color: '#94a3b8', paddingTop: '10px' }} />
+                {chartEvolucao.series.map((fam, i) => (
+                  <Line
+                    key={fam}
+                    type="linear"
+                    dataKey={fam}
+                    name={fam}
+                    stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                    strokeWidth={2.5}
+                    dot={{ r: chartEvolucao.isDiario ? 3.5 : 4 }}
+                    activeDot={{ r: 6, cursor: chartEvolucao.isDiario ? 'pointer' : 'default' }}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+
+            {/* Tabela de Relação Diária quando 1 único mês for selecionado */}
+            {chartEvolucao.isDiario && resumoDiario.length > 0 && (
+              <div className="mt-5 pt-4 border-t border-white/5 space-y-2.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    <span>📅</span> Ocorrências por Data no Mês — <span className="text-blue-400">{chartEvolucao.mesNome}</span>
+                  </h4>
+                  <span className="text-[11px] text-slate-400">
+                    💡 Clique em qualquer linha para abrir a relação detalhada das O.S. daquele dia
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto rounded-xl border border-white/10 bg-slate-900/60 max-h-64 overflow-y-auto">
+                  <table className="sgm-table w-full text-xs">
+                    <thead className="sticky top-0 bg-slate-900 z-10">
+                      <tr>
+                        <th className="py-2.5 px-3 text-left">Data</th>
+                        <th className="py-2.5 px-3 text-left">Dia da Semana</th>
+                        <th className="py-2.5 px-3 text-center">Total de O.S.</th>
+                        <th className="py-2.5 px-3 text-left">Famílias Mais Afetadas</th>
+                        <th className="py-2.5 px-3 text-center w-28">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {resumoDiario.map(item => (
+                        <tr
+                          key={item.dataIso}
+                          onClick={() => handleAbrirDia(item.dataIso, item.registros)}
+                          className="hover:bg-slate-800/90 cursor-pointer border-b border-white/5 transition-colors group"
+                        >
+                          <td className="py-2 px-3 font-semibold text-white whitespace-nowrap group-hover:text-blue-400">
+                            {item.dataLabel}
+                          </td>
+                          <td className="py-2 px-3 text-slate-400 whitespace-nowrap">
+                            {item.diaSemana}
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <span className="px-2.5 py-0.5 rounded-full font-bold text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                              {item.total} O.S.
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-slate-300 truncate max-w-[280px]" title={item.topFamiliasStr}>
+                            {item.topFamiliasStr}
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); handleAbrirDia(item.dataIso, item.registros); }}
+                              className="px-2.5 py-1 rounded-lg bg-blue-500/10 group-hover:bg-blue-600 text-blue-400 group-hover:text-white text-[11px] font-medium transition-all"
+                            >
+                              Ver O.S. →
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="flex items-center justify-center h-48 text-slate-500 text-sm text-center">
             <div>
@@ -396,6 +522,13 @@ export default function Tab2Analitico() {
           )}
         </div>
       </div>
+      {/* Modal de Detalhes da Data Selecionada */}
+      <ModalDetalhesDia
+        open={modalDia.aberto}
+        onClose={() => setModalDia({ aberto: false, dataIso: '', registros: [] })}
+        dataIso={modalDia.dataIso}
+        registrosDia={modalDia.registros}
+      />
     </div>
   );
 }

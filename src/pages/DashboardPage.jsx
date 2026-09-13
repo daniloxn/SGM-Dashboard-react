@@ -6,11 +6,13 @@ import { exportarRelatorioExcel } from '../lib/exportExcel';
 
 import Sidebar from '../components/layout/Sidebar';
 import Tab1Geral from '../components/tabs/Tab1Geral';
+import Tab7Oficina from '../components/tabs/Tab7Oficina';
 import Tab2Analitico from '../components/tabs/Tab2Analitico';
 import Tab3Familias from '../components/tabs/Tab3Familias';
 import Tab4Picos from '../components/tabs/Tab4Picos';
 import Tab5Mecanicos from '../components/tabs/Tab5Mecanicos';
 import Tab6Explorador from '../components/tabs/Tab6Explorador';
+import TabConfiguracoes from '../components/tabs/TabConfiguracoes';
 
 import ImportModal from '../components/modals/ImportModal';
 import MonthManagerModal from '../components/modals/MonthManagerModal';
@@ -25,12 +27,14 @@ export default function DashboardPage() {
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const { bancoGeral, ordemMeses, relMeses, relCompBaseMes } = useStore();
-  const { carregarDados, deletarOS } = useFirestore();
+  const { bancoGeral, ordemMeses, relMeses, relCompBaseMes, theme, setTheme } = useStore();
+  const { carregarDados, deletarOS, carregarOsOficina, carregarComponentes } = useFirestore();
 
   // Load Firestore on mount
   useEffect(() => {
     carregarDados();
+    carregarOsOficina();
+    carregarComponentes();
   }, []);
 
   // Handle Excel Export
@@ -68,7 +72,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-900 text-slate-100">
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Sidebar (Responsive desktop & mobile drawer) */}
       <Sidebar
         activeTab={activeTab}
@@ -83,12 +87,12 @@ export default function DashboardPage() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="h-16 px-4 md:px-6 bg-slate-900/80 backdrop-blur border-b border-white/5 flex items-center justify-between shrink-0">
+        <header className="h-16 px-4 md:px-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-white/5 flex items-center justify-between shrink-0 transition-colors duration-200">
           <div className="flex items-center gap-3">
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="md:hidden p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+              className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
               title="Abrir Menu"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -96,17 +100,28 @@ export default function DashboardPage() {
               </svg>
             </button>
 
-            <h1 className="text-sm md:text-lg font-bold text-white tracking-wide truncate">
+            <h1 className="text-sm md:text-lg font-bold text-slate-900 dark:text-white tracking-wide truncate">
               {activeTab === 'aba1' && '📊 Visão Geral'}
+              {activeTab === 'aba7' && '🛠️ O.S. Oficina & WhatsApp'}
               {activeTab === 'aba2' && '🔬 Painel Analítico'}
               {activeTab === 'aba3' && '📈 Evolução de Famílias e Falhas'}
               {activeTab === 'aba4' && '📅 Levantamento de Picos Diários'}
               {activeTab === 'aba5' && '👨‍🔧 Controle e Produtividade da Equipe'}
               {activeTab === 'aba6' && '🗂️ Banco de Dados Geral (Explorador)'}
+              {activeTab === 'config' && '⚙️ Configurações Gerais'}
             </h1>
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
+            {/* Quick Theme Toggle Button */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center text-sm"
+              title={theme === 'dark' ? 'Alternar para Tema Claro' : 'Alternar para Tema Escuro'}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+
             {bancoGeral.length > 0 && (
               <button
                 onClick={handleExport}
@@ -135,6 +150,7 @@ export default function DashboardPage() {
         {/* Tab Content with Scroll */}
         <main className="flex-1 overflow-y-auto">
           {activeTab === 'aba1' && <Tab1Geral />}
+          {activeTab === 'aba7' && <Tab7Oficina />}
           {activeTab === 'aba2' && <Tab2Analitico />}
           {activeTab === 'aba3' && <Tab3Familias />}
           {activeTab === 'aba4' && <Tab4Picos />}
@@ -144,6 +160,9 @@ export default function DashboardPage() {
               onEdit={handleOpenEdit}
               onDelete={handleDeleteOS}
             />
+          )}
+          {activeTab === 'config' && (
+            <TabConfiguracoes onOpenImport={() => setIsImportOpen(true)} />
           )}
         </main>
       </div>

@@ -9,6 +9,22 @@ const useStore = create((set, get) => ({
   authInitialized: false,
   setUser: (user) => set({ user, authInitialized: true }),
 
+  // ---- Theme State (Light / Dark) ----
+  theme: (typeof window !== 'undefined' && localStorage.getItem('sgm_theme')) || 'dark',
+  setTheme: (theme) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sgm_theme', theme);
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      }
+    }
+    set({ theme });
+  },
+
   // ---- DB Status ----
   dbStatus: 'idle', // 'idle' | 'syncing' | 'online' | 'error'
   dbMsg: 'Aguardando...',
@@ -34,6 +50,22 @@ const useStore = create((set, get) => ({
   compReaisUnicos: [],
   reincidenciaKPIs: null,
   alertasSemanais: null,
+
+  // ---- Oficina & WhatsApp State ----
+  osOficinaList: [],
+  componentesList: [],
+  setOsOficinaList: (osOficinaList) => set({ osOficinaList }),
+  adicionarOsOficinaState: (item) => set(s => ({ osOficinaList: [item, ...s.osOficinaList] })),
+  atualizarOsOficinaState: (id, updates) => set(s => ({
+    osOficinaList: s.osOficinaList.map(o => (o.id === id ? { ...o, ...updates } : o))
+  })),
+  excluirOsOficinaState: (id) => set(s => ({
+    osOficinaList: s.osOficinaList.filter(o => o.id !== id)
+  })),
+  setComponentesList: (componentesList) => set({ componentesList }),
+  atualizarComponenteState: (id, updates) => set(s => ({
+    componentesList: s.componentesList.map(c => (c.id === id ? { ...c, ...updates } : c))
+  })),
 
   // ---- Actions ----
   setBancoGeral: (bancoGeral, ordemMeses) => {
@@ -112,6 +144,21 @@ const useStore = create((set, get) => ({
     const state = get();
     const novoBanco = state.bancoGeral.filter(r => r['Aba_Origem'] !== nomeMes);
     const novosMeses = state.ordemMeses.filter(m => m !== nomeMes);
+    const computed = processarAnalisesGlobais(novoBanco);
+    set({ bancoGeral: novoBanco, ordemMeses: novosMeses, ...computed });
+  },
+
+  /** Delete records of a specific date from a month */
+  excluirPorData: (nomeMes, dataStr) => {
+    const state = get();
+    const novoBanco = state.bancoGeral.filter(r => {
+      const matchMes = r['Aba_Origem'] === nomeMes;
+      const matchData = r['Data_Limpa'] === dataStr || r['Início da OS']?.startsWith?.(dataStr) || r['Data']?.startsWith?.(dataStr);
+      return !(matchMes && matchData);
+    });
+
+    const sobrouNoMes = novoBanco.some(r => r['Aba_Origem'] === nomeMes);
+    const novosMeses = sobrouNoMes ? state.ordemMeses : state.ordemMeses.filter(m => m !== nomeMes);
     const computed = processarAnalisesGlobais(novoBanco);
     set({ bancoGeral: novoBanco, ordemMeses: novosMeses, ...computed });
   },

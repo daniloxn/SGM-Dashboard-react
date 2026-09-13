@@ -34,17 +34,17 @@ export default function MonthManagerModal({ open, onClose }) {
         </div>
       ) : (
         <div className="space-y-2">
-          <p className="text-sm text-slate-400 mb-4">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
             Apague um mês para limpar os dados e reimportar uma planilha corrigida.
           </p>
           {ordemMeses.map(mes => {
             const qtd = bancoGeral.filter(r => r['Aba_Origem'] === mes).length;
             const isDeleting = deleting === mes;
             return (
-              <div key={mes} className="flex items-center justify-between bg-slate-900/60 border border-white/5 rounded-xl px-4 py-3">
+              <div key={mes} className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3">
                 <div>
-                  <p className="font-semibold text-white">📅 {mes}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="font-semibold text-slate-900 dark:text-white">📅 {mes}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     {qtd} Ordem{qtd !== 1 ? 's' : ''} de Serviço
                   </p>
                 </div>
