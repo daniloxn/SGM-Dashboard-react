@@ -144,57 +144,57 @@ export default function AssociarSodepModal({ open, onClose, osOficina, onSuccess
     >
       <div className="space-y-4">
         {/* Card de Resumo da O.S. WhatsApp (Aberta) */}
-        <div className="bg-slate-900 border border-blue-500/30 rounded-xl p-3.5 text-xs space-y-2">
+        <div className="bg-slate-50 dark:bg-slate-900 border border-blue-500/30 rounded-xl p-3.5 text-xs space-y-2">
           <div className="flex items-center justify-between">
-            <span className="font-bold text-blue-400 uppercase tracking-wider text-[11px]">
+            <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[11px]">
               📋 O.S. Aberta (WhatsApp)
             </span>
-            <span className="bg-blue-500/20 text-blue-300 font-semibold px-2 py-0.5 rounded text-[10px]">
+            <span className="bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold px-2 py-0.5 rounded text-[10px]">
               Aguardando Fechamento
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-700 dark:text-slate-300">
             <div>
-              <span className="text-slate-500 block text-[10px]">Data & Hora Abertura:</span>
-              <strong className="text-white">
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Data & Hora Abertura:</span>
+              <strong className="text-slate-900 dark:text-white">
                 {osOficina.dataBr || osOficina.data} às {osOficina.hora}
               </strong>
             </div>
             <div>
-              <span className="text-slate-500 block text-[10px]">Sonda:</span>
-              <strong className="text-white">{osOficina.sonda || '-'}</strong>
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Sonda:</span>
+              <strong className="text-slate-900 dark:text-white">{osOficina.sonda || '-'}</strong>
             </div>
             <div>
-              <span className="text-slate-500 block text-[10px]">Componente:</span>
-              <strong className="text-white">{osOficina.componente || '-'}</strong>
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Componente:</span>
+              <strong className="text-slate-900 dark:text-white">{osOficina.componente || '-'}</strong>
             </div>
             <div>
-              <span className="text-slate-500 block text-[10px]">Peça Saiu / Entrou:</span>
-              <strong className="text-white">
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Peça Saiu / Entrou:</span>
+              <strong className="text-slate-900 dark:text-white">
                 {osOficina.saiuNumero ? `Saiu: ${osOficina.saiuNumero}` : 'Saiu: -'}
                 {osOficina.entrouNumero ? ` | Entrou: ${osOficina.entrouNumero}` : ''}
               </strong>
             </div>
           </div>
 
-          <div className="pt-1 text-slate-400">
-            <span className="text-slate-500">Problema: </span>
-            <span className="text-slate-200">{osOficina.problema || '-'}</span>
+          <div className="pt-1 text-slate-600 dark:text-slate-400">
+            <span className="text-slate-500 dark:text-slate-400">Problema: </span>
+            <span className="text-slate-800 dark:text-slate-200">{osOficina.problema || '-'}</span>
           </div>
         </div>
 
         {/* Alerta de erro */}
         {erro && (
-          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400 flex items-center justify-between">
+          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-600 dark:text-red-400 flex items-center justify-between">
             <span>⚠️ {erro}</span>
-            <button onClick={() => setErro(null)} className="text-red-300 font-bold ml-2">✕</button>
+            <button onClick={() => setErro(null)} className="text-red-500 dark:text-red-300 font-bold ml-2">✕</button>
           </div>
         )}
 
         {/* Campo de Busca de O.S. SODEP */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-semibold text-slate-300">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
             Localizar O.S. Fechada do SODEP:
           </label>
           <div className="relative">
@@ -203,18 +203,18 @@ export default function AssociarSodepModal({ open, onClose, osOficina, onSuccess
               value={busca}
               onChange={e => setBusca(e.target.value)}
               placeholder="Digite o número da O.S., componente, mecânico ou sonda..."
-              className="w-full bg-slate-900 border border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
             {busca && (
               <button
                 onClick={() => setBusca('')}
-                className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-white"
+                className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white"
               >
                 ✕
               </button>
             )}
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             {busca.trim()
               ? `Resultados para "${busca}":`
               : '💡 Sugestões automáticas por compatibilidade de sonda e componente:'}
@@ -232,49 +232,49 @@ export default function AssociarSodepModal({ open, onClose, osOficina, onSuccess
                   onClick={() => setRegistroSelecionado(r)}
                   className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${
                     selecionado
-                      ? 'bg-blue-600/20 border-blue-500 shadow-md'
+                      ? 'bg-blue-600/15 border-blue-500 shadow-md'
                       : r._eValida
-                      ? 'bg-slate-900/60 border-white/5 hover:border-blue-500/40 hover:bg-slate-800/80'
-                      : 'bg-red-950/20 border-red-500/20 opacity-60 hover:opacity-100'
+                      ? 'bg-white dark:bg-slate-900/60 border-slate-200 dark:border-white/5 hover:border-blue-500/40 hover:bg-slate-50 dark:hover:bg-slate-800/80'
+                      : 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-500/20 opacity-70 hover:opacity-100'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm text-white flex items-center gap-1.5">
-                      <span className="text-blue-400">O.S. {r['OS'] || 'S/N'}</span>
-                      <span className="text-[11px] text-slate-400 font-normal">
+                    <span className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <span className="text-blue-600 dark:text-blue-400">O.S. {r['OS'] || 'S/N'}</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-normal">
                         ({r['Aba_Origem'] || 'Mês'})
                       </span>
                     </span>
 
                     {r._eValida ? (
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-semibold px-2 py-0.5 rounded border border-emerald-500/30">
+                      <span className="text-[10px] bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold px-2 py-0.5 rounded border border-emerald-500/30">
                         ✓ Horário Válido
                       </span>
                     ) : (
-                      <span className="text-[10px] bg-red-500/20 text-red-300 font-semibold px-2 py-0.5 rounded border border-red-500/30" title="Data/hora anterior à abertura">
+                      <span className="text-[10px] bg-red-500/15 text-red-700 dark:text-red-300 font-semibold px-2 py-0.5 rounded border border-red-500/30" title="Data/hora anterior à abertura">
                         ✕ Anterior à Abertura
                       </span>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-slate-300 text-[11px]">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-slate-700 dark:text-slate-300 text-[11px]">
                     <div>
-                      <span className="text-slate-500">Início: </span>
+                      <span className="text-slate-500 dark:text-slate-400">Início: </span>
                       <strong>{r._dataExibicao}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-500">Sonda: </span>
+                      <span className="text-slate-500 dark:text-slate-400">Sonda: </span>
                       <strong>{normalizarSonda(r['Causa'] || r['CAUSA']) || '-'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-500">Mecânico: </span>
+                      <span className="text-slate-500 dark:text-slate-400">Mecânico: </span>
                       <strong>{r['Mecânico'] || r['MECANICO'] || '-'}</strong>
                     </div>
                   </div>
 
-                  <div className="mt-1.5 text-[11px] text-slate-400 flex flex-wrap items-center gap-x-3">
-                    <span>Peça: <strong className="text-slate-200">{r['Componentes'] || r['COMPONENTES'] || '-'}</strong></span>
-                    <span>Falha: <strong className="text-slate-200">{r['falhas'] || r['FALHAS'] || '-'}</strong></span>
+                  <div className="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-x-3">
+                    <span>Peça: <strong className="text-slate-800 dark:text-slate-200">{r['Componentes'] || r['COMPONENTES'] || '-'}</strong></span>
+                    <span>Falha: <strong className="text-slate-800 dark:text-slate-200">{r['falhas'] || r['FALHAS'] || '-'}</strong></span>
                   </div>
                 </div>
               );
@@ -288,7 +288,7 @@ export default function AssociarSodepModal({ open, onClose, osOficina, onSuccess
 
         {/* Alerta de Inconsistência Temporal */}
         {!validacaoTemporal.ok && (
-          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400 space-y-1">
+          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-600 dark:text-red-400 space-y-1">
             <p className="font-bold flex items-center gap-1.5">
               <span>🚫</span> Associação Bloqueada
             </p>
@@ -297,11 +297,11 @@ export default function AssociarSodepModal({ open, onClose, osOficina, onSuccess
         )}
 
         {/* Rodapé com botões de ação */}
-        <div className="flex items-center justify-between pt-3 border-t border-white/5">
-          <div className="text-xs text-slate-400">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-white/5">
+          <div className="text-xs text-slate-600 dark:text-slate-400">
             {registroSelecionado ? (
               <span>
-                Selecionada: <strong className="text-white">O.S. {registroSelecionado['OS']}</strong>
+                Selecionada: <strong className="text-slate-900 dark:text-white">O.S. {registroSelecionado['OS']}</strong>
               </span>
             ) : (
               <span className="text-slate-500">Selecione uma O.S. acima</span>

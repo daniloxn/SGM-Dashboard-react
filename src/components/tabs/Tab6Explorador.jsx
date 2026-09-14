@@ -55,26 +55,26 @@ export default function Tab6Explorador({ onEdit, onDelete }) {
   return (
     <div className="space-y-6 p-4 sm:p-6">
       {/* Barra de Busca e Contador */}
-      <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
+      <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl p-4 flex flex-col sm:flex-row gap-4 justify-between items-center shadow-sm">
         <div className="relative w-full sm:w-96">
           <input
             type="text"
             value={busca}
             onChange={handleBuscaChange}
             placeholder="🔍 Buscar por OS, Peça, Falha, Sonda, Mecânico..."
-            className="w-full bg-slate-900/60 border border-white/10 rounded-lg px-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
+            className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
           />
           {busca && (
             <button
               onClick={() => { setBusca(''); setPagina(1); }}
-              className="absolute right-2.5 top-2.5 text-xs text-slate-400 hover:text-white"
+              className="absolute right-2.5 top-2.5 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white"
             >
               ✕
             </button>
           )}
         </div>
-        <div className="text-xs text-slate-400 font-medium">
-          Exibindo <span className="text-white font-semibold">{registrosFiltrados.length}</span> registros de {bancoGeral.length}
+        <div className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+          Exibindo <span className="text-slate-900 dark:text-white font-semibold">{registrosFiltrados.length}</span> registros de {bancoGeral.length}
         </div>
       </div>
 
@@ -98,19 +98,19 @@ export default function Tab6Explorador({ onEdit, onDelete }) {
               {dadosPaginados.length > 0 ? (
                 dadosPaginados.map(r => (
                   <tr key={r._docId || r._originalIndex}>
-                    <td className="font-semibold text-blue-400">{r['OS'] || '-'}</td>
-                    <td className="text-slate-400 whitespace-nowrap">{r['Data_Limpa'] || '-'}</td>
-                    <td><span className="px-2 py-0.5 rounded text-xs bg-slate-800 text-slate-300 border border-white/5">{r['Aba_Origem'] || '-'}</span></td>
-                    <td className="font-medium text-slate-200 truncate max-w-[180px]" title={r['Componentes'] || r['COMPONENTES']}>
+                    <td className="font-semibold text-blue-600 dark:text-blue-400">{r['OS'] || '-'}</td>
+                    <td className="text-slate-600 dark:text-slate-400 whitespace-nowrap">{r['Data_Limpa'] || '-'}</td>
+                    <td><span className="px-2 py-0.5 rounded text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5 font-medium">{r['Aba_Origem'] || '-'}</span></td>
+                    <td className="font-medium text-slate-900 dark:text-slate-200 truncate max-w-[180px]" title={r['Componentes'] || r['COMPONENTES']}>
                       {r['Componentes'] || r['COMPONENTES'] || '-'}
                     </td>
-                    <td className="text-slate-300 truncate max-w-[180px]" title={r['falhas'] || r['FALHAS']}>
+                    <td className="text-slate-700 dark:text-slate-300 truncate max-w-[180px]" title={r['falhas'] || r['FALHAS']}>
                       {r['falhas'] || r['FALHAS'] || '-'}
                     </td>
-                    <td className="text-slate-300 truncate max-w-[120px]" title={r['Causa'] || r['CAUSA']}>
+                    <td className="text-slate-700 dark:text-slate-300 truncate max-w-[120px]" title={r['Causa'] || r['CAUSA']}>
                       {normalizarSonda(r['Causa'] || r['CAUSA']) || '-'}
                     </td>
-                    <td className="text-slate-300 truncate max-w-[140px]" title={r['Mecânico'] || r['MECANICO']}>
+                    <td className="text-slate-700 dark:text-slate-300 truncate max-w-[140px]" title={r['Mecânico'] || r['MECANICO']}>
                       {r['Mecânico'] || r['MECANICO'] || '-'}
                     </td>
                     <td className="text-center">
@@ -118,14 +118,14 @@ export default function Tab6Explorador({ onEdit, onDelete }) {
                         <button
                           onClick={() => onEdit(r._originalIndex, r)}
                           title="Editar Ordem de Serviço"
-                          className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-blue-400 transition-colors"
+                          className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         >
                           ✏️
                         </button>
                         <button
                           onClick={() => onDelete(r._originalIndex)}
                           title="Excluir Ordem de Serviço"
-                          className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-red-400 transition-colors"
+                          className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                         >
                           🗑️
                         </button>
@@ -146,22 +146,22 @@ export default function Tab6Explorador({ onEdit, onDelete }) {
 
         {/* Paginação */}
         {totalPaginas > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-800/80 border-t border-white/5">
-            <span className="text-xs text-slate-400">
-              Página <strong className="text-white">{paginaValida}</strong> de <strong className="text-white">{totalPaginas}</strong>
+          <div className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-white/5">
+            <span className="text-xs text-slate-600 dark:text-slate-400">
+              Página <strong className="text-slate-900 dark:text-white">{paginaValida}</strong> de <strong className="text-slate-900 dark:text-white">{totalPaginas}</strong>
             </span>
             <div className="flex gap-1">
               <button
                 disabled={paginaValida <= 1}
                 onClick={() => setPagina(p => Math.max(1, p - 1))}
-                className="px-3 py-1 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed rounded text-xs text-slate-200 transition-colors"
+                className="px-3 py-1 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed rounded text-xs text-slate-800 dark:text-slate-200 transition-colors"
               >
                 Anterior
               </button>
               <button
                 disabled={paginaValida >= totalPaginas}
                 onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))}
-                className="px-3 py-1 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed rounded text-xs text-slate-200 transition-colors"
+                className="px-3 py-1 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed rounded text-xs text-slate-800 dark:text-slate-200 transition-colors"
               >
                 Próxima
               </button>

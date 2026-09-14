@@ -1,5 +1,5 @@
 // src/components/layout/Sidebar.jsx
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
@@ -19,15 +19,10 @@ const tabs = [
 export default function Sidebar({
   activeTab,
   onTabChange,
-  onImport,
-  onManageMonths,
-  onExport,
   mobileOpen = false,
   onCloseMobile
 }) {
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('sgm_sidebar_collapsed') === 'true');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
   const dbStatus = useStore(s => s.dbStatus);
   const dbMsg = useStore(s => s.dbMsg);
 
@@ -42,15 +37,6 @@ export default function Sidebar({
   async function handleLogout() {
     await signOut(auth);
   }
-
-  // Close menu on outside click
-  useEffect(() => {
-    function handler(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
-    }
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
 
   const statusColor = {
     idle: 'bg-slate-400 dark:bg-slate-500',
@@ -129,65 +115,7 @@ export default function Sidebar({
       </nav>
 
       {/* Bottom actions */}
-      <div className="px-2 pb-3 space-y-1 border-t border-slate-200 dark:border-white/5 pt-2">
-        {/* Data menu */}
-        <div ref={menuRef} className="relative">
-          <button
-            onClick={() => setMenuOpen(v => !v)}
-            title="Dados & Planilhas"
-            className={clsx(
-              'sidebar-nav-btn',
-              collapsed && 'justify-center px-0'
-            )}
-          >
-            <span className="text-base">🗃️</span>
-            {!collapsed && (
-              <>
-                <span className="text-sm flex-1">Dados & Planilhas</span>
-                <svg className={clsx('w-3 h-3 text-slate-400 transition-transform', menuOpen && 'rotate-180')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </>
-            )}
-          </button>
-
-          {/* Popover menu */}
-          {menuOpen && (
-            <div className={clsx(
-              'absolute z-50 bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl py-1 min-w-[200px]',
-              collapsed ? 'left-full ml-2 bottom-0' : 'bottom-full mb-1 left-0 right-0'
-            )}>
-              <label className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors rounded-lg mx-1">
-                <span>📥</span> Importar Planilha
-                <input type="file" accept=".xlsx,.xls" className="hidden" onChange={onImport} />
-              </label>
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  onTabChange('config');
-                  if (onCloseMobile) onCloseMobile();
-                }}
-                className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors rounded-lg mx-1 w-full text-left"
-              >
-                <span>⚙️</span> Controle de Dados
-              </button>
-              <button
-                onClick={() => { setMenuOpen(false); onManageMonths(); }}
-                className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors rounded-lg mx-1 w-full text-left"
-              >
-                <span>📅</span> Gerenciar Meses
-              </button>
-              <div className="border-t border-slate-200 dark:border-white/5 my-1" />
-              <button
-                onClick={() => { setMenuOpen(false); window.location.reload(); }}
-                className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors rounded-lg mx-1 w-full text-left"
-              >
-                <span>🔄</span> Recarregar Dados
-              </button>
-            </div>
-          )}
-        </div>
-
+      <div className="px-2 pb-3 border-t border-slate-200 dark:border-white/5 pt-2">
         {/* Logout */}
         <button
           onClick={handleLogout}

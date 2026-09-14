@@ -11,8 +11,8 @@ const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-slate-800 border border-white/10 rounded-xl px-4 py-3 shadow-xl text-sm">
-      <p className="font-semibold text-white mb-1">{label}</p>
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 shadow-xl text-sm text-slate-900 dark:text-white">
+      <p className="font-bold text-slate-900 dark:text-white mb-1">{label}</p>
       <p style={{ color: payload[0]?.color }}>O.S.: <strong>{payload[0]?.value}</strong></p>
     </div>
   );
@@ -56,11 +56,11 @@ export default function Tab4Picos() {
   return (
     <div className="space-y-6 p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h2 className="text-base sm:text-lg font-semibold text-white">📅 Picos Diários de Manutenção</h2>
+        <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">📅 Picos Diários de Manutenção</h2>
         <select
           value={filtroMes}
           onChange={e => setFiltroMes(e.target.value)}
-          className="bg-slate-900/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 w-full sm:w-auto"
+          className="bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 w-full sm:w-auto"
         >
           <option value="TODOS">Todos os Meses</option>
           {ordemMeses.map(m => <option key={m} value={m}>{m}</option>)}
@@ -69,7 +69,7 @@ export default function Tab4Picos() {
 
       {/* Daily chart */}
       <div className="chart-box">
-        <h3 className="text-base font-semibold text-white mb-4">📊 Ocorrências por Dia (últimos 90 dias)</h3>
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">📊 Ocorrências por Dia (últimos 90 dias)</h3>
         {dadosDias.length > 0 ? (
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={dadosDias}>
@@ -93,7 +93,7 @@ export default function Tab4Picos() {
 
       {/* Day of week */}
       <div className="chart-box">
-        <h3 className="text-base font-semibold text-white mb-4">📆 Distribuição por Dia da Semana</h3>
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">📆 Distribuição por Dia da Semana</h3>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={dadosSemana}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />

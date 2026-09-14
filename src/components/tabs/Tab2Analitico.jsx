@@ -13,8 +13,8 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null;
   const total = payload.reduce((s, p) => s + (Number(p.value) || 0), 0);
   return (
-    <div className="bg-slate-800/95 border border-white/10 rounded-xl px-4 py-3 shadow-2xl text-xs max-w-xs backdrop-blur z-50">
-      <p className="font-bold text-white mb-2 pb-1 border-b border-white/10">{label}</p>
+    <div className="bg-white dark:bg-slate-800/95 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 shadow-2xl text-xs max-w-xs backdrop-blur z-50 text-slate-900 dark:text-white">
+      <p className="font-bold text-slate-900 dark:text-white mb-2 pb-1 border-b border-slate-200 dark:border-white/10">{label}</p>
       {payload.map((p, i) => {
         const val = Number(p.value) || 0;
         const pct = total > 0 ? ((val / total) * 100).toFixed(0) : 0;
@@ -22,16 +22,16 @@ const CustomTooltip = ({ active, payload, label }) => {
           <div key={i} className="flex items-center justify-between gap-3 py-0.5">
             <div className="flex items-center gap-1.5 truncate">
               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: p.color || p.fill || '#3b82f6' }} />
-              <span className="text-slate-300 truncate">{p.name}</span>
+              <span className="text-slate-700 dark:text-slate-300 truncate font-medium">{p.name}</span>
             </div>
-            <div className="shrink-0 font-semibold text-white">
+            <div className="shrink-0 font-semibold text-slate-900 dark:text-white">
               {val} {payload.length > 1 && total > 0 && <span className="text-slate-500 font-normal">({pct}%)</span>}
             </div>
           </div>
         );
       })}
       {payload.length > 1 && (
-        <div className="flex items-center justify-between pt-1.5 mt-1.5 border-t border-white/10 font-bold text-white">
+        <div className="flex items-center justify-between pt-1.5 mt-1.5 border-t border-slate-200 dark:border-white/10 font-bold text-slate-900 dark:text-white">
           <span>Total Danos:</span>
           <span>{total}</span>
         </div>
@@ -277,7 +277,7 @@ export default function Tab2Analitico() {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-400 mb-1 block font-medium">Famílias / Peças</label>
+            <label className="text-xs text-slate-600 dark:text-slate-400 mb-1 block font-medium">Famílias / Peças</label>
             <MultiSelect
               id="filtroPecasAnalitico"
               options={pecasOptions}
@@ -289,11 +289,11 @@ export default function Tab2Analitico() {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-400 mb-1 block font-medium">Mecânico</label>
+            <label className="text-xs text-slate-600 dark:text-slate-400 mb-1 block font-medium">Mecânico</label>
             <select
               value={selMec}
               onChange={e => setSelMec(e.target.value)}
-              className="w-full bg-slate-900/80 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer"
+              className="w-full bg-white dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer"
             >
               <option value="TODOS">Todos os Mecânicos</option>
               {mecanicosUnicos.map(m => <option key={m} value={m}>{m}</option>)}
@@ -301,12 +301,12 @@ export default function Tab2Analitico() {
           </div>
         </div>
 
-        <div className="mt-3.5 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+        <div className="mt-3.5 pt-3 border-t border-slate-200 dark:border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-400">
           <span>
-            Exibindo <strong className="text-white">{dadosFiltrados.length}</strong> O.S. no escopo selecionado
+            Exibindo <strong className="text-slate-900 dark:text-white">{dadosFiltrados.length}</strong> O.S. no escopo selecionado
           </span>
           {maisDanificada && (
-            <span className="text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-md border border-rose-500/20 font-medium">
+            <span className="text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 px-2.5 py-1 rounded-md border border-rose-200 dark:border-rose-500/20 font-medium">
               Peça com mais danos: <strong>{maisDanificada.familia}</strong> ({maisDanificada.count} ocorrências • {maisDanificada.pct}%)
             </span>
           )}
@@ -317,22 +317,22 @@ export default function Tab2Analitico() {
       <div className="chart-box">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <span>📈</span>
               {chartEvolucao.isDiario ? (
-                <>Evolução Diária das Famílias Mais Danificadas — <span className="text-blue-400">{chartEvolucao.mesNome}</span></>
+                <>Evolução Diária das Famílias Mais Danificadas — <span className="text-blue-600 dark:text-blue-400">{chartEvolucao.mesNome}</span></>
               ) : (
                 <>Evolução por Família de Componente ao Longo dos Meses</>
               )}
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {chartEvolucao.isDiario
                 ? 'Acompanhe as linhas por família ao longo de cada dia do mês para identificar peças subindo fora da curva'
                 : 'Traçado comparativo das famílias com maior volume de quebras em cada mês'}
             </p>
           </div>
 
-          <span className="text-[11px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded-md border border-white/10 self-start sm:self-auto shrink-0">
+          <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-md border border-slate-200 dark:border-white/10 self-start sm:self-auto shrink-0 font-medium">
             {chartEvolucao.series.length} famílias monitoradas
           </span>
         </div>
@@ -373,19 +373,19 @@ export default function Tab2Analitico() {
 
             {/* Tabela de Relação Diária quando 1 único mês for selecionado */}
             {chartEvolucao.isDiario && resumoDiario.length > 0 && (
-              <div className="mt-5 pt-4 border-t border-white/5 space-y-2.5">
+              <div className="mt-5 pt-4 border-t border-slate-200 dark:border-white/5 space-y-2.5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                    <span>📅</span> Ocorrências por Data no Mês — <span className="text-blue-400">{chartEvolucao.mesNome}</span>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>📅</span> Ocorrências por Data no Mês — <span className="text-blue-600 dark:text-blue-400">{chartEvolucao.mesNome}</span>
                   </h4>
-                  <span className="text-[11px] text-slate-400">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
                     💡 Clique em qualquer linha para abrir a relação detalhada das O.S. daquele dia
                   </span>
                 </div>
 
-                <div className="overflow-x-auto rounded-xl border border-white/10 bg-slate-900/60 max-h-64 overflow-y-auto">
+                <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/60 max-h-64 overflow-y-auto">
                   <table className="sgm-table w-full text-xs">
-                    <thead className="sticky top-0 bg-slate-900 z-10">
+                    <thead className="sticky top-0 bg-slate-100 dark:bg-slate-900 z-10 text-slate-700 dark:text-slate-300">
                       <tr>
                         <th className="py-2.5 px-3 text-left">Data</th>
                         <th className="py-2.5 px-3 text-left">Dia da Semana</th>
@@ -399,27 +399,27 @@ export default function Tab2Analitico() {
                         <tr
                           key={item.dataIso}
                           onClick={() => handleAbrirDia(item.dataIso, item.registros)}
-                          className="hover:bg-slate-800/90 cursor-pointer border-b border-white/5 transition-colors group"
+                          className="hover:bg-slate-50 dark:hover:bg-slate-800/90 cursor-pointer border-b border-slate-100 dark:border-white/5 transition-colors group"
                         >
-                          <td className="py-2 px-3 font-semibold text-white whitespace-nowrap group-hover:text-blue-400">
+                          <td className="py-2 px-3 font-semibold text-slate-900 dark:text-white whitespace-nowrap group-hover:text-blue-600 dark:group-hover:text-blue-400">
                             {item.dataLabel}
                           </td>
-                          <td className="py-2 px-3 text-slate-400 whitespace-nowrap">
+                          <td className="py-2 px-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
                             {item.diaSemana}
                           </td>
                           <td className="py-2 px-3 text-center">
-                            <span className="px-2.5 py-0.5 rounded-full font-bold text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                            <span className="px-2.5 py-0.5 rounded-full font-bold text-xs bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20">
                               {item.total} O.S.
                             </span>
                           </td>
-                          <td className="py-2 px-3 text-slate-300 truncate max-w-[280px]" title={item.topFamiliasStr}>
+                          <td className="py-2 px-3 text-slate-700 dark:text-slate-300 truncate max-w-[280px]" title={item.topFamiliasStr}>
                             {item.topFamiliasStr}
                           </td>
                           <td className="py-2 px-3 text-center">
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); handleAbrirDia(item.dataIso, item.registros); }}
-                              className="px-2.5 py-1 rounded-lg bg-blue-500/10 group-hover:bg-blue-600 text-blue-400 group-hover:text-white text-[11px] font-medium transition-all"
+                              className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 dark:bg-blue-500/10 dark:hover:bg-blue-600 text-blue-600 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white text-[11px] font-medium transition-all"
                             >
                               Ver O.S. →
                             </button>
@@ -447,10 +447,10 @@ export default function Tab2Analitico() {
         {/* Ranking de Famílias Mais Danificadas */}
         <div className="chart-box">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <span>🔩</span> Famílias que Mais Danificam (Ranking)
             </h3>
-            <span className="text-xs text-slate-400">Por volume de O.S.</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Por volume de O.S.</span>
           </div>
 
           {rankingFamilias.length > 0 ? (
@@ -470,13 +470,13 @@ export default function Tab2Analitico() {
               </ResponsiveContainer>
 
               {/* Lista detalhada compacta */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-white/5">
                 {rankingFamilias.slice(0, 6).map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between bg-slate-900/60 px-3 py-2 rounded-lg text-xs">
-                    <span className="text-slate-300 font-medium truncate max-w-[140px]">
+                  <div key={idx} className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-transparent px-3 py-2 rounded-lg text-xs">
+                    <span className="text-slate-800 dark:text-slate-300 font-medium truncate max-w-[140px]">
                       {idx + 1}. {item.familia}
                     </span>
-                    <span className="font-bold text-white">
+                    <span className="font-bold text-slate-900 dark:text-white">
                       {item.count} <span className="text-slate-500 font-normal">({item.pct}%)</span>
                     </span>
                   </div>
@@ -496,10 +496,10 @@ export default function Tab2Analitico() {
         {/* Top Tipos de Falhas Recorrentes */}
         <div className="chart-box">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <span>🔴</span> Tipos de Falhas Associadas
             </h3>
-            <span className="text-xs text-slate-400">Contexto filtrado</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Contexto filtrado</span>
           </div>
 
           {topFalhas.length > 0 ? (

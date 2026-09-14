@@ -54,42 +54,42 @@ export default function EditOSModal({ open, onClose, registro, index }) {
     }
   }
 
-  const fieldClass = "w-full bg-slate-900/60 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all";
+  const fieldClass = "w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all";
 
   return (
     <Modal open={open} onClose={onClose} title="✏️ Editar Ordem de Serviço" size="md">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Número da O.S.</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Número da O.S.</label>
           <input className={fieldClass} value={form.os} onChange={handleChange('os')} placeholder="Ex: 12345" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Data</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Data</label>
           <input className={fieldClass} type="date" value={form.data} onChange={handleChange('data')} />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Mês (Aba)</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Mês (Aba)</label>
           <input className={fieldClass} value={form.mes} onChange={handleChange('mes')} placeholder="Ex: JANEIRO" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Sonda</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Sonda</label>
           <input className={fieldClass} value={form.sonda} onChange={handleChange('sonda')} placeholder="Ex: SD-01" />
         </div>
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Componente / Tag</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Componente / Tag</label>
           <input className={fieldClass} value={form.componente} onChange={handleChange('componente')} placeholder="Ex: MANDRIL 01" />
         </div>
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Falha Reportada</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Falha Reportada</label>
           <input className={fieldClass} value={form.falha} onChange={handleChange('falha')} placeholder="Ex: VAZAMENTO" />
         </div>
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-slate-400 mb-1.5">Mecânico Responsável</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Mecânico Responsável</label>
           <input className={fieldClass} value={form.mecanico} onChange={handleChange('mecanico')} placeholder="Nome do mecânico" />
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/5">
+      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-white/5">
         <button onClick={onClose} className="btn-secondary" disabled={saving}>Cancelar</button>
         <button onClick={handleSave} className="btn-primary" disabled={saving}>
           {saving ? (

@@ -3,9 +3,11 @@ import { useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
 import { useFirestore } from '../../hooks/useFirestore';
 import { normalizarDataObj } from '../../lib/dataUtils';
+import { baixarModeloExcel } from '../../lib/templateExcel';
 
-export default function TabConfiguracoes({ onOpenImport }) {
+export default function TabConfiguracoes({ onOpenImport, onManageMonths }) {
   const [subAba, setSubAba] = useState('interface'); // 'interface' | 'planilhas'
+  const [baixandoModelo, setBaixandoModelo] = useState(false);
   
   // Theme state from Zustand
   const { theme, setTheme, ordemMeses = [], bancoGeral = [] } = useStore();
@@ -117,6 +119,18 @@ export default function TabConfiguracoes({ onOpenImport }) {
     }
   }
 
+  // Handler: Baixar Modelo Oficial de Importação
+  async function handleBaixarModelo() {
+    setBaixandoModelo(true);
+    try {
+      await baixarModeloExcel();
+    } catch (err) {
+      alert('Erro ao gerar modelo Excel: ' + err.message);
+    } finally {
+      setBaixandoModelo(false);
+    }
+  }
+
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
       {/* Header & Sub-nav */}
@@ -125,7 +139,7 @@ export default function TabConfiguracoes({ onOpenImport }) {
           <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span>⚙️</span> Configurações Gerais do Sistema
           </h2>
-          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Central de personalização visual da interface e controle cirúrgico de dados.
           </p>
         </div>
@@ -168,7 +182,7 @@ export default function TabConfiguracoes({ onOpenImport }) {
               <h3 className="text-base md:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>🌓</span> Tema do Sistema (Light / Dark Mode)
               </h3>
-              <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-1">
                 Escolha o modo de exibição que melhor se adapta à sua preferência e ao ambiente de trabalho.
               </p>
             </div>
@@ -188,7 +202,7 @@ export default function TabConfiguracoes({ onOpenImport }) {
                     <span className="text-3xl p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">☀️</span>
                     <div>
                       <h4 className="font-bold text-slate-900 dark:text-white text-base">Tema Claro (Light Mode)</h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                         Visual limpo, fundo neutro suave e alto contraste para ambientes iluminados.
                       </p>
                     </div>
@@ -201,9 +215,9 @@ export default function TabConfiguracoes({ onOpenImport }) {
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-lg p-3 text-xs space-y-1.5 shadow-sm">
-                  <div className="flex items-center justify-between text-slate-600">
-                    <span className="font-medium">Preview do Card</span>
-                    <span className="text-emerald-600 font-semibold">+14.2%</span>
+                  <div className="flex items-center justify-between text-slate-800 dark:text-slate-200">
+                    <span className="font-semibold">Preview do Card</span>
+                    <span className="text-emerald-600 font-bold">+14.2%</span>
                   </div>
                   <div className="h-2 bg-slate-100 rounded-full w-3/4" />
                 </div>
@@ -223,7 +237,7 @@ export default function TabConfiguracoes({ onOpenImport }) {
                     <span className="text-3xl p-2 bg-indigo-950 text-indigo-400 rounded-xl">🌙</span>
                     <div>
                       <h4 className="font-bold text-slate-900 dark:text-white text-base">Tema Escuro (Dark Mode)</h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                         Tons escuros neutros para reduzir o cansaço visual e destacar os gráficos.
                       </p>
                     </div>
@@ -236,9 +250,9 @@ export default function TabConfiguracoes({ onOpenImport }) {
                 </div>
 
                 <div className="bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs space-y-1.5 shadow-sm">
-                  <div className="flex items-center justify-between text-slate-300">
-                    <span className="font-medium">Preview do Card</span>
-                    <span className="text-emerald-400 font-semibold">+14.2%</span>
+                  <div className="flex items-center justify-between text-slate-200">
+                    <span className="font-semibold">Preview do Card</span>
+                    <span className="text-emerald-400 font-bold">+14.2%</span>
                   </div>
                   <div className="h-2 bg-slate-800 rounded-full w-3/4" />
                 </div>
@@ -297,6 +311,46 @@ export default function TabConfiguracoes({ onOpenImport }) {
               <p className="text-amber-700 dark:text-amber-300">
                 Esta central permite apagar dados com precisão (por dia específico ou por mês completo). Todas as exclusões atualizam a nuvem (Firestore) e recalculam imediatamente os gráficos do dashboard.
               </p>
+            </div>
+          </div>
+
+          {/* Seção 0: Modelo Oficial de Planilha Excel (Download) */}
+          <div className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-white/10 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1.5 max-w-2xl">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-2xl">📄</span>
+                <h3 className="text-base md:text-lg font-bold text-slate-900 dark:text-white">
+                  Planilha Modelo de Importação (Excel)
+                </h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50">
+                  Modelo Oficial SGM
+                </span>
+              </div>
+              <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Baixe o modelo com a estrutura exata e colunas reconhecidas pelo sistema (<strong>OS</strong>, <strong>Início da OS</strong>, <strong>Componentes</strong>, <strong>falhas</strong>, <strong>Causa</strong> e <strong>Mecânico</strong>). Inclui linhas de exemplo e aba de instruções para preenchimento ágil.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={handleBaixarModelo}
+                disabled={baixandoModelo}
+                className="btn-success text-xs sm:text-sm font-semibold py-2.5 px-4 flex items-center gap-2 shadow-md hover:shadow-emerald-500/20 active:scale-95"
+                title="Baixar arquivo Excel pré-formatado"
+              >
+                {baixandoModelo ? (
+                  <>
+                    <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Gerando Modelo...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>📥</span>
+                    <span>Baixar Modelo (.xlsx)</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
@@ -473,24 +527,38 @@ export default function TabConfiguracoes({ onOpenImport }) {
           <div className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-white/10 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h4 className="font-bold text-slate-900 dark:text-white text-sm">
-                Precisa atualizar os dados com uma nova planilha?
+                Central de Operações de Planilha
               </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Importe planilhas com detecção automática de datas ou recarregue os dados do banco de dados na nuvem.
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                Importe novos arquivos, gerencie os meses cadastrados ou recarregue os dados da nuvem.
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
               <button
+                type="button"
                 onClick={() => window.location.reload()}
                 className="btn-secondary text-xs"
+                title="Recarregar dados do Firestore"
               >
-                <span>🔄</span> Recarregar Dados
+                <span>🔄</span> Recarregar
               </button>
+              {onManageMonths && (
+                <button
+                  type="button"
+                  onClick={onManageMonths}
+                  className="btn-secondary text-xs"
+                  title="Abrir painel de gerenciamento de meses"
+                >
+                  <span>📅</span> Gerenciar Meses
+                </button>
+              )}
               {onOpenImport && (
                 <button
+                  type="button"
                   onClick={onOpenImport}
-                  className="btn-primary text-xs"
+                  className="btn-primary text-xs font-semibold"
+                  title="Importar nova planilha Excel"
                 >
                   <span>📥</span> Importar Planilha
                 </button>

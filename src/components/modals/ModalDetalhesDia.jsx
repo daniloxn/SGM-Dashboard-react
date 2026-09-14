@@ -57,17 +57,17 @@ export default function ModalDetalhesDia({ open, onClose, dataIso, registrosDia 
       <div className="space-y-4">
         {/* KPIs do dia */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-slate-900/80 border border-white/5 rounded-xl p-3 text-center">
-            <span className="text-[11px] text-slate-400 block uppercase font-semibold">Total de O.S.</span>
-            <span className="text-xl sm:text-2xl font-bold text-blue-400">{kpisDia.total}</span>
+          <div className="bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/5 rounded-xl p-3 text-center">
+            <span className="text-[11px] text-slate-600 dark:text-slate-400 block uppercase font-semibold">Total de O.S.</span>
+            <span className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{kpisDia.total}</span>
           </div>
-          <div className="bg-slate-900/80 border border-white/5 rounded-xl p-3 text-center">
-            <span className="text-[11px] text-slate-400 block uppercase font-semibold">Sondas com Falhas</span>
-            <span className="text-xl sm:text-2xl font-bold text-amber-400">{kpisDia.totalSondas}</span>
+          <div className="bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/5 rounded-xl p-3 text-center">
+            <span className="text-[11px] text-slate-600 dark:text-slate-400 block uppercase font-semibold">Sondas com Falhas</span>
+            <span className="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">{kpisDia.totalSondas}</span>
           </div>
-          <div className="bg-slate-900/80 border border-white/5 rounded-xl p-3 text-center">
-            <span className="text-[11px] text-slate-400 block uppercase font-semibold">Mecânicos Envolvidos</span>
-            <span className="text-xl sm:text-2xl font-bold text-emerald-400">{kpisDia.totalMec}</span>
+          <div className="bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/5 rounded-xl p-3 text-center">
+            <span className="text-[11px] text-slate-600 dark:text-slate-400 block uppercase font-semibold">Mecânicos Envolvidos</span>
+            <span className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">{kpisDia.totalMec}</span>
           </div>
         </div>
 
@@ -78,12 +78,12 @@ export default function ModalDetalhesDia({ open, onClose, dataIso, registrosDia 
             value={busca}
             onChange={e => setBusca(e.target.value)}
             placeholder="🔍 Filtrar O.S. deste dia por número, peça, falha, sonda ou mecânico..."
-            className="w-full bg-slate-900 border border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
           {busca && (
             <button
               onClick={() => setBusca('')}
-              className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-white"
+              className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white"
             >
               ✕
             </button>
@@ -91,10 +91,10 @@ export default function ModalDetalhesDia({ open, onClose, dataIso, registrosDia 
         </div>
 
         {/* Tabela de O.S. do Dia */}
-        <div className="border border-white/10 rounded-xl overflow-hidden bg-slate-900/50">
+        <div className="border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden bg-white dark:bg-slate-900/50">
           <div className="max-h-[50vh] overflow-y-auto">
             <table className="sgm-table w-full text-xs">
-              <thead className="sticky top-0 bg-slate-900 z-10">
+              <thead className="sticky top-0 bg-slate-100 dark:bg-slate-900 z-10">
                 <tr>
                   <th className="py-2.5 px-3 text-left">Nº O.S.</th>
                   <th className="py-2.5 px-3 text-left">Início / Hora</th>
@@ -107,23 +107,23 @@ export default function ModalDetalhesDia({ open, onClose, dataIso, registrosDia 
               <tbody>
                 {registrosFiltrados.length > 0 ? (
                   registrosFiltrados.map((r, idx) => (
-                    <tr key={r._docId || idx} className="hover:bg-slate-800/60 border-b border-white/5">
-                      <td className="py-2 px-3 font-mono font-bold text-blue-400 whitespace-nowrap">
+                    <tr key={r._docId || idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 border-b border-slate-200 dark:border-white/5">
+                      <td className="py-2 px-3 font-mono font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">
                         {r['OS'] || '-'}
                       </td>
-                      <td className="py-2 px-3 text-slate-400 whitespace-nowrap">
+                      <td className="py-2 px-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
                         {r['Início da OS'] || r['INÍCIO DA OS'] || r['Data_Limpa'] || '-'}
                       </td>
-                      <td className="py-2 px-3 font-semibold text-slate-200 whitespace-nowrap">
+                      <td className="py-2 px-3 font-semibold text-slate-900 dark:text-slate-200 whitespace-nowrap">
                         {normalizarSonda(r['Causa'] || r['CAUSA']) || '-'}
                       </td>
-                      <td className="py-2 px-3 text-slate-200 font-medium truncate max-w-[180px]" title={r['Componentes'] || r['COMPONENTES']}>
+                      <td className="py-2 px-3 text-slate-900 dark:text-slate-200 font-medium truncate max-w-[180px]" title={r['Componentes'] || r['COMPONENTES']}>
                         {r['Componentes'] || r['COMPONENTES'] || '-'}
                       </td>
-                      <td className="py-2 px-3 text-slate-300 truncate max-w-[200px]" title={r['falhas'] || r['FALHAS']}>
+                      <td className="py-2 px-3 text-slate-700 dark:text-slate-300 truncate max-w-[200px]" title={r['falhas'] || r['FALHAS']}>
                         {r['falhas'] || r['FALHAS'] || '-'}
                       </td>
-                      <td className="py-2 px-3 text-slate-300 truncate max-w-[140px]" title={r['Mecânico'] || r['MECANICO']}>
+                      <td className="py-2 px-3 text-slate-700 dark:text-slate-300 truncate max-w-[140px]" title={r['Mecânico'] || r['MECANICO']}>
                         {r['Mecânico'] || r['MECANICO'] || '-'}
                       </td>
                     </tr>
@@ -140,7 +140,7 @@ export default function ModalDetalhesDia({ open, onClose, dataIso, registrosDia 
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs text-slate-400">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-white/5 text-xs text-slate-600 dark:text-slate-400">
           <span>Exibindo <strong>{registrosFiltrados.length}</strong> de <strong>{registrosDia.length}</strong> O.S.</span>
           <button type="button" onClick={onClose} className="btn-secondary text-xs">
             Fechar

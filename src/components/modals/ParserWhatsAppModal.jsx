@@ -101,7 +101,7 @@ Hora: 2:20`;
     onClose();
   }
 
-  const inputClass = "w-full bg-slate-900/80 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
+  const inputClass = "w-full bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
 
   return (
     <Modal
@@ -111,22 +111,22 @@ Hora: 2:20`;
       size="xl"
     >
       {erro && (
-        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400 flex items-center justify-between">
+        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-600 dark:text-red-400 flex items-center justify-between">
           <span>⚠️ {erro}</span>
-          <button onClick={() => setErro(null)} className="text-red-300 font-bold ml-2">✕</button>
+          <button onClick={() => setErro(null)} className="text-red-500 dark:text-red-300 font-bold ml-2">✕</button>
         </div>
       )}
 
       {etapa === 'input' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Cole abaixo uma ou várias mensagens enviadas no grupo do WhatsApp. O sistema detectará automaticamente as O.S., turnos, turmas, peças e horários.
             </p>
             <button
               type="button"
               onClick={() => setTextoColado(exemploMensagem)}
-              className="text-xs text-blue-400 hover:text-blue-300 underline font-medium shrink-0 ml-2"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline font-medium shrink-0 ml-2"
             >
               Colar exemplo
             </button>
@@ -137,11 +137,11 @@ Hora: 2:20`;
             onChange={e => setTextoColado(e.target.value)}
             rows={10}
             placeholder="Cole o texto aqui... (ex: ORDEM DE SERVIÇO, Data: 11/09/2026, Sonda: 14, Turno: 3⁰, Componente: Freio de molas, Saiu: 01, Entrou: 05...)"
-            className="w-full bg-slate-900 border border-white/10 rounded-xl p-3.5 text-xs sm:text-sm font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-y"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl p-3.5 text-xs sm:text-sm font-mono text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-y"
           />
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-            <span className="text-[11px] text-slate-500">
+            <span className="text-[11px] text-slate-600 dark:text-slate-500">
               💡 Dica: Você pode colar múltiplas mensagens de uma única vez.
             </span>
             <div className="flex gap-2 w-full sm:w-auto">
@@ -163,21 +163,21 @@ Hora: 2:20`;
       {etapa === 'review' && (
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-            <div className="text-xs text-blue-300">
+            <div className="text-xs text-blue-800 dark:text-blue-300">
               ✅ <strong>{mensagensRevisao.length}</strong> O.S. identificada(s). Confira os dados abaixo e ajuste qualquer campo antes de confirmar.
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleAdicionarManual}
-                className="text-xs px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors font-medium flex items-center gap-1"
+                className="text-xs px-2.5 py-1 rounded bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 transition-colors font-medium flex items-center gap-1"
               >
                 <span>+</span> Adicionar O.S. Manual
               </button>
               <button
                 type="button"
                 onClick={() => setEtapa('input')}
-                className="text-xs text-slate-400 hover:text-slate-200 underline"
+                className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 underline"
               >
                 Voltar ao texto
               </button>
@@ -189,11 +189,11 @@ Hora: 2:20`;
             {mensagensRevisao.map((item, idx) => (
               <div
                 key={item._tempId || idx}
-                className="bg-slate-900/90 border border-white/10 rounded-xl p-3.5 space-y-3 relative group"
+                className="bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-xl p-3.5 space-y-3 relative group"
               >
-                <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-mono">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/5">
+                  <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span className="w-5 h-5 rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center text-[10px] font-mono">
                       #{idx + 1}
                     </span>
                     O.S. Sonda {item.sonda || 'Não informada'}
@@ -202,7 +202,7 @@ Hora: 2:20`;
                     type="button"
                     onClick={() => handleRemoverItem(idx)}
                     title="Remover esta O.S."
-                    className="text-xs text-slate-500 hover:text-red-400 p-1 rounded transition-colors"
+                    className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 p-1 rounded transition-colors"
                   >
                     🗑️ Excluir
                   </button>
@@ -211,7 +211,7 @@ Hora: 2:20`;
                 {/* Grid de campos editáveis */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Data</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Data</label>
                     <input
                       type="date"
                       value={item.data}
@@ -221,7 +221,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Hora</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Hora</label>
                     <input
                       type="text"
                       placeholder="02:20"
@@ -232,7 +232,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Sonda</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Sonda</label>
                     <input
                       type="text"
                       placeholder="SD-14"
@@ -243,7 +243,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Turno</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Turno</label>
                     <select
                       value={item.turno}
                       onChange={e => handleCampoChange(idx, 'turno', e.target.value)}
@@ -257,7 +257,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Turma</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Turma</label>
                     <input
                       type="text"
                       placeholder="A, B, C..."
@@ -268,7 +268,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Sondador</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Sondador</label>
                     <input
                       type="text"
                       placeholder="Nome do sondador"
@@ -279,7 +279,7 @@ Hora: 2:20`;
                   </div>
 
                   <div className="col-span-2 sm:col-span-2 md:col-span-2">
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Componente / Peça</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Componente / Peça</label>
                     <input
                       type="text"
                       placeholder="Ex: FREIO DE MOLAS, MANDRIL"
@@ -290,7 +290,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Saiu Nº (Defeito)</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Saiu Nº (Defeito)</label>
                     <input
                       type="text"
                       placeholder="Ex: 01"
@@ -301,7 +301,7 @@ Hora: 2:20`;
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Entrou Nº (Reserva)</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Entrou Nº (Reserva)</label>
                     <input
                       type="text"
                       placeholder="Ex: 05 (ou vazio)"
@@ -312,7 +312,7 @@ Hora: 2:20`;
                   </div>
 
                   <div className="col-span-2 sm:col-span-4 md:col-span-2">
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Status Inicial</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Status Inicial</label>
                     <select
                       value={item.status}
                       onChange={e => handleCampoChange(idx, 'status', e.target.value)}
@@ -325,7 +325,7 @@ Hora: 2:20`;
                   </div>
 
                   <div className="col-span-2 sm:col-span-4 md:col-span-6">
-                    <label className="block text-[10px] uppercase font-semibold text-slate-400 mb-1">Problema / Defeito Apresentado</label>
+                    <label className="block text-[10px] uppercase font-semibold text-slate-600 dark:text-slate-400 mb-1">Problema / Defeito Apresentado</label>
                     <input
                       type="text"
                       placeholder="Descreva o problema"
@@ -339,19 +339,19 @@ Hora: 2:20`;
                 {/* Resumo da movimentação de estoque/peças */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
                   {item.saiuNumero ? (
-                    <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-300 border border-amber-500/20 px-2 py-0.5 rounded">
+                    <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 px-2 py-0.5 rounded font-medium">
                       🔻 <strong>{item.componente || 'Peça'} Nº {item.saiuNumero}</strong> sai da {item.sonda || 'sonda'} ➔ vai para Oficina (Manutenção)
                     </span>
                   ) : (
-                    <span className="text-slate-500 text-[10px]">Sem peça retirada</span>
+                    <span className="text-slate-500 dark:text-slate-400 text-[10px]">Sem peça retirada</span>
                   )}
 
                   {item.entrouNumero ? (
-                    <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2 py-0.5 rounded">
+                    <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 px-2 py-0.5 rounded font-medium">
                       🔺 <strong>{item.componente || 'Peça'} Nº {item.entrouNumero}</strong> ➔ instalada na {item.sonda || 'sonda'}
                     </span>
                   ) : (
-                    <span className="text-slate-500 text-[10px] bg-slate-800/60 px-2 py-0.5 rounded">
+                    <span className="text-slate-600 dark:text-slate-400 text-[10px] bg-slate-200 dark:bg-slate-800/60 px-2 py-0.5 rounded">
                       ⚠️ Não substituída imediatamente na sonda
                     </span>
                   )}
@@ -360,7 +360,7 @@ Hora: 2:20`;
             ))}
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-white/5">
             <button
               type="button"
               onClick={() => setEtapa('input')}

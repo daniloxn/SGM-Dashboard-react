@@ -12,14 +12,14 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   const total = payload.reduce((s, p) => s + (p.value || 0), 0);
   return (
-    <div className="bg-slate-800 border border-white/10 rounded-xl px-4 py-3 shadow-xl text-sm max-w-xs">
-      <p className="font-semibold text-white mb-2">{label}</p>
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 shadow-xl text-sm max-w-xs text-slate-900 dark:text-white">
+      <p className="font-bold text-slate-900 dark:text-white mb-2">{label}</p>
       {payload.map((p, i) => {
         const pct = total > 0 ? ((p.value / total) * 100).toFixed(1) : 0;
         return (
           <p key={i} style={{ color: p.color }}>
             {p.name}: <strong>{p.value}</strong>
-            <span className="text-slate-400 ml-1">({pct}%)</span>
+            <span className="text-slate-500 dark:text-slate-400 ml-1">({pct}%)</span>
           </p>
         );
       })}
@@ -181,7 +181,7 @@ export default function Tab3Familias() {
       {/* Chart 1: Component evolution */}
       <div className="chart-box">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <h3 className="text-base font-semibold text-white">📈 Evolução por Família / Tag</h3>
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">📈 Evolução por Família / Tag</h3>
           <div className="w-full sm:w-72">
             <MultiSelect
               id="filtroCompEvolucao"
@@ -212,7 +212,7 @@ export default function Tab3Familias() {
       <div className="chart-box">
         <div className="flex flex-col gap-3 mb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h3 className="text-base font-semibold text-white">🔴 Falhas por Família / Tag</h3>
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">🔴 Falhas por Família / Tag</h3>
             <div className="w-full sm:w-72">
               <MultiSelect
                 id="filtroFalhaComp"
@@ -226,11 +226,11 @@ export default function Tab3Familias() {
           </div>
           {falhasDisponiveis.length > 0 && selFalhaComp.length > 1 && !selFalhaComp.includes('GERAL') && (
             <div className="flex items-center gap-2">
-              <label className="text-xs text-slate-400 shrink-0">Falha específica:</label>
+              <label className="text-xs text-slate-600 dark:text-slate-400 shrink-0 font-medium">Falha específica:</label>
               <select
                 value={selFalha}
                 onChange={e => setSelFalha(e.target.value)}
-                className="flex-1 max-w-xs bg-slate-900/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="flex-1 max-w-xs bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="TODOS">Todas as Falhas</option>
                 {falhasDisponiveis.map(f => <option key={f} value={f}>{f}</option>)}

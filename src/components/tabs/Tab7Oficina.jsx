@@ -167,15 +167,15 @@ export default function Tab7Oficina() {
   return (
     <div className="space-y-6 p-4 sm:p-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-800/60 border border-white/5 rounded-2xl p-4 sm:p-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-white/5 rounded-2xl p-4 sm:p-5 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-2xl">🛠️</span>
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-wide">
               Controle de O.S. Oficina & WhatsApp
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Triagem pré-SODEP das mensagens do WhatsApp, monitoramento de turnos e rastreabilidade contínua de peças.
           </p>
         </div>
@@ -192,62 +192,62 @@ export default function Tab7Oficina() {
 
       {/* Grid de KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="kpi-card bg-slate-900/60 border border-amber-500/20">
+        <div className="kpi-card bg-white dark:bg-slate-900/60 border border-amber-500/20">
           <div className="flex items-center justify-between">
             <span className="text-2xl">⏳</span>
-            <span className="text-[10px] bg-amber-500/10 text-amber-400 font-bold px-2 py-0.5 rounded">
+            <span className="text-[10px] bg-amber-500/10 text-amber-500 dark:text-amber-400 font-bold px-2 py-0.5 rounded">
               Pendente
             </span>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold mt-1 text-amber-400">{kpis.abertas}</p>
-          <p className="text-xs text-slate-400 mt-0.5">Aguardando Oficina</p>
+          <p className="text-2xl sm:text-3xl font-bold mt-1 text-amber-500 dark:text-amber-400">{kpis.abertas}</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Aguardando Oficina</p>
         </div>
 
-        <div className="kpi-card bg-slate-900/60 border border-blue-500/20">
+        <div className="kpi-card bg-white dark:bg-slate-900/60 border border-blue-500/20">
           <div className="flex items-center justify-between">
             <span className="text-2xl">🛠️</span>
-            <span className="text-[10px] bg-blue-500/10 text-blue-400 font-bold px-2 py-0.5 rounded">
+            <span className="text-[10px] bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold px-2 py-0.5 rounded">
               Na Bancada
             </span>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold mt-1 text-blue-400">{kpis.emManutencao}</p>
-          <p className="text-xs text-slate-400 mt-0.5">Em Manutenção</p>
+          <p className="text-2xl sm:text-3xl font-bold mt-1 text-blue-600 dark:text-blue-400">{kpis.emManutencao}</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Em Manutenção</p>
         </div>
 
-        <div className="kpi-card bg-slate-900/60 border border-emerald-500/20">
+        <div className="kpi-card bg-white dark:bg-slate-900/60 border border-emerald-500/20">
           <div className="flex items-center justify-between">
             <span className="text-2xl">✅</span>
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold px-2 py-0.5 rounded">
+            <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2 py-0.5 rounded">
               Finalizadas
             </span>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold mt-1 text-emerald-400">{kpis.concluidas}</p>
-          <p className="text-xs text-slate-400 mt-0.5">Concluídas / Associadas</p>
+          <p className="text-2xl sm:text-3xl font-bold mt-1 text-emerald-600 dark:text-emerald-400">{kpis.concluidas}</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Concluídas / Associadas</p>
         </div>
 
-        <div className="kpi-card bg-slate-900/60 border border-purple-500/20">
+        <div className="kpi-card bg-white dark:bg-slate-900/60 border border-purple-500/20">
           <div className="flex items-center justify-between">
             <span className="text-2xl">📦</span>
-            <span className="text-[10px] bg-purple-500/10 text-purple-400 font-bold px-2 py-0.5 rounded">
+            <span className="text-[10px] bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold px-2 py-0.5 rounded">
               Oficina
             </span>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold mt-1 text-purple-400">{kpis.pecasOficina}</p>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-2xl sm:text-3xl font-bold mt-1 text-purple-600 dark:text-purple-400">{kpis.pecasOficina}</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
             Peças na Oficina ({kpis.oficinaManut} em conserto • {kpis.oficinaReserva} reservas)
           </p>
         </div>
       </div>
 
       {/* Sub-navegação */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-2">
         <button
           type="button"
           onClick={() => setSubAba('ordens')}
           className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
             subAba === 'ordens'
               ? 'bg-blue-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60'
           }`}
         >
           <span>📋</span> O.S. da Oficina & WhatsApp ({osFiltradas.length})
@@ -259,7 +259,7 @@ export default function Tab7Oficina() {
           className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
             subAba === 'componentes'
               ? 'bg-blue-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60'
           }`}
         >
           <span>📍</span> Rastreabilidade de Componentes ({componentesFiltrados.length})
@@ -270,17 +270,17 @@ export default function Tab7Oficina() {
       {subAba === 'ordens' && (
         <div className="space-y-4">
           {/* Barra de Filtros */}
-          <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
             <div className="relative w-full md:w-80">
               <input
                 type="text"
                 value={buscaOS}
                 onChange={e => setBuscaOS(e.target.value)}
                 placeholder="🔍 Buscar por Sonda, Peça, Defeito, O.S. SODEP..."
-                className="w-full bg-slate-900/80 border border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {buscaOS && (
-                <button onClick={() => setBuscaOS('')} className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-white">
+                <button onClick={() => setBuscaOS('')} className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white">
                   ✕
                 </button>
               )}
@@ -290,7 +290,7 @@ export default function Tab7Oficina() {
               <select
                 value={filtroStatus}
                 onChange={e => setFiltroStatus(e.target.value)}
-                className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="TODOS">Todos os Status</option>
                 <option value="aberta">⏳ Aguardando Oficina</option>
@@ -301,7 +301,7 @@ export default function Tab7Oficina() {
               <select
                 value={filtroSonda}
                 onChange={e => setFiltroSonda(e.target.value)}
-                className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="TODOS">Todas as Sondas</option>
                 {sondasOpcoes.map(s => <option key={s} value={s}>{s}</option>)}
@@ -311,7 +311,7 @@ export default function Tab7Oficina() {
                 type="button"
                 onClick={() => setOrdemCrescente(v => !v)}
                 title="Inverter ordenação cronológica"
-                className="bg-slate-900 border border-white/10 hover:border-white/20 rounded-lg px-3 py-2 text-xs text-slate-300 transition-colors flex items-center gap-1"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1"
               >
                 <span>{ordemCrescente ? '⬆️ Mais Antigas' : '⬇️ Mais Recentes'}</span>
               </button>
@@ -319,7 +319,7 @@ export default function Tab7Oficina() {
           </div>
 
           {/* Tabela de O.S. da Oficina */}
-          <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-900/60 shadow-xl">
+          <div className="border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/60 shadow-sm">
             <div className="overflow-x-auto">
               <table className="sgm-table w-full text-xs">
                 <thead>
@@ -339,20 +339,20 @@ export default function Tab7Oficina() {
                       const dtFormatada = os.dataBr || os.data;
 
                       return (
-                        <tr key={os.id} className="hover:bg-slate-800/50 border-b border-white/5 transition-colors">
+                        <tr key={os.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-200 dark:border-white/5 transition-colors">
                           {/* Data e Hora */}
                           <td className="py-2.5 px-3 whitespace-nowrap">
-                            <div className="font-semibold text-white">{dtFormatada}</div>
-                            <div className="text-[11px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                            <div className="font-semibold text-slate-900 dark:text-white">{dtFormatada}</div>
+                            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1 mt-0.5">
                               <span>🕒 {os.hora}</span>
                             </div>
                           </td>
 
                           {/* Sonda, Turno e Turma */}
                           <td className="py-2.5 px-3 whitespace-nowrap">
-                            <div className="font-bold text-blue-400">{os.sonda || '-'}</div>
-                            <div className="text-[11px] text-slate-400 mt-0.5">
-                              Turno: <strong className="text-slate-300">{os.turno || '-'}</strong> • Turma: <strong className="text-slate-300">{os.turma || '-'}</strong>
+                            <div className="font-bold text-blue-600 dark:text-blue-400">{os.sonda || '-'}</div>
+                            <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                              Turno: <strong className="text-slate-800 dark:text-slate-300">{os.turno || '-'}</strong> • Turma: <strong className="text-slate-800 dark:text-slate-300">{os.turma || '-'}</strong>
                             </div>
                             {os.sondador && (
                               <div className="text-[10px] text-slate-500 truncate max-w-[120px]" title={os.sondador}>
@@ -363,10 +363,10 @@ export default function Tab7Oficina() {
 
                           {/* Componente e Defeito */}
                           <td className="py-2.5 px-3 max-w-[220px]">
-                            <div className="font-bold text-slate-200 truncate" title={os.componente}>
+                            <div className="font-bold text-slate-900 dark:text-slate-200 truncate" title={os.componente}>
                               {os.componente || 'Não especificado'}
                             </div>
-                            <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5" title={os.problema}>
+                            <div className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 mt-0.5" title={os.problema}>
                               {os.problema || 'Sem descrição'}
                             </div>
                           </td>
@@ -375,19 +375,19 @@ export default function Tab7Oficina() {
                           <td className="py-2.5 px-3 whitespace-nowrap">
                             <div className="space-y-1">
                               {os.saiuNumero ? (
-                                <span className="inline-flex items-center gap-1 text-[11px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                                <span className="inline-flex items-center gap-1 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-medium">
                                   🔻 Saiu Nº <strong>{os.saiuNumero}</strong>
                                 </span>
                               ) : (
-                                <span className="text-[10px] text-slate-500 block">Sem peça retirada</span>
+                                <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Sem peça retirada</span>
                               )}
 
                               {os.entrouNumero ? (
-                                <span className="inline-flex items-center gap-1 text-[11px] text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">
                                   🔺 Entrou Nº <strong>{os.entrouNumero}</strong>
                                 </span>
                               ) : (
-                                <span className="text-[10px] text-slate-500 block">Não substituída</span>
+                                <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Não substituída</span>
                               )}
                             </div>
                           </td>
@@ -395,17 +395,17 @@ export default function Tab7Oficina() {
                           {/* Status */}
                           <td className="py-2.5 px-3 text-center whitespace-nowrap">
                             {os.status === 'aberta' && (
-                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                                 ⏳ Aguardando
                               </span>
                             )}
                             {os.status === 'em_manutencao' && (
-                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-500/30">
                                 🛠️ Na Bancada
                               </span>
                             )}
                             {os.status === 'concluida' && (
-                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
                                 ✅ Concluída
                               </span>
                             )}
@@ -415,7 +415,7 @@ export default function Tab7Oficina() {
                           <td className="py-2.5 px-3 text-center whitespace-nowrap">
                             {os.osSodepAssociada ? (
                               <div className="space-y-0.5">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 font-mono">
                                   🔗 O.S. {os.osSodepAssociada}
                                 </span>
                                 <span className="block text-[9px] text-slate-500">
@@ -423,7 +423,7 @@ export default function Tab7Oficina() {
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-[11px] text-slate-500">
+                              <span className="text-[11px] text-slate-400 dark:text-slate-500">
                                 Não vinculada
                               </span>
                             )}
@@ -438,7 +438,7 @@ export default function Tab7Oficina() {
                                   type="button"
                                   onClick={() => handleIniciarManutencao(os.id)}
                                   title="Iniciar Manutenção na Oficina"
-                                  className="p-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-colors"
+                                  className="p-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 transition-colors"
                                 >
                                   🛠️
                                 </button>
@@ -450,7 +450,7 @@ export default function Tab7Oficina() {
                                   type="button"
                                   onClick={() => handleConcluirManual(os.id)}
                                   title="Dar Baixa / Concluir na Oficina"
-                                  className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors"
+                                  className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition-colors"
                                 >
                                   ✅
                                 </button>
@@ -461,7 +461,7 @@ export default function Tab7Oficina() {
                                 type="button"
                                 onClick={() => setModalAssociar({ aberto: true, osItem: os })}
                                 title="Vincular à O.S. SODEP Fechada"
-                                className="p-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 transition-colors"
+                                className="p-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 transition-colors"
                               >
                                 🔗
                               </button>
@@ -471,7 +471,7 @@ export default function Tab7Oficina() {
                                 type="button"
                                 onClick={() => setModalEditar({ aberto: true, osItem: os })}
                                 title="Editar dados da O.S."
-                                className="p-1.5 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-300 transition-colors"
+                                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors"
                               >
                                 ✏️
                               </button>
@@ -481,7 +481,7 @@ export default function Tab7Oficina() {
                                 type="button"
                                 onClick={() => handleExcluirOS(os.id)}
                                 title="Excluir O.S."
-                                className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+                                className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-colors"
                               >
                                 🗑️
                               </button>
@@ -514,17 +514,17 @@ export default function Tab7Oficina() {
       {subAba === 'componentes' && (
         <div className="space-y-4">
           {/* Barra de Filtros de Componentes */}
-          <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
             <div className="relative w-full sm:w-80">
               <input
                 type="text"
                 value={buscaComp}
                 onChange={e => setBuscaComp(e.target.value)}
                 placeholder="🔍 Buscar por Tipo, Número ou Sonda..."
-                className="w-full bg-slate-900/80 border border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-lg px-3.5 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {buscaComp && (
-                <button onClick={() => setBuscaComp('')} className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-white">
+                <button onClick={() => setBuscaComp('')} className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white">
                   ✕
                 </button>
               )}
@@ -534,7 +534,7 @@ export default function Tab7Oficina() {
               <select
                 value={filtroLocalizacao}
                 onChange={e => setFiltroLocalizacao(e.target.value)}
-                className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="TODOS">Todas as Localizações</option>
                 <option value="OFICINA_MANUTENCAO">🛠️ Na Oficina (Em Manutenção)</option>
@@ -547,14 +547,14 @@ export default function Tab7Oficina() {
                 onClick={handleSincronizarDatas}
                 disabled={sincronizando}
                 title="Reconcilia a localização e o histórico de todas as peças baseado na cronologia de datas de cada O.S."
-                className="bg-slate-900 border border-white/10 hover:border-blue-500/40 rounded-lg px-3 py-2 text-xs text-blue-400 hover:text-blue-300 transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-blue-500/40 rounded-lg px-3 py-2 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
               >
                 <span>{sincronizando ? '⏳' : '🔄'}</span>
                 <span>{sincronizando ? 'Reconciliando...' : 'Reconciliar por Datas'}</span>
               </button>
 
               {msgSincronizado && (
-                <span className="text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg animate-pulse">
+                <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg animate-pulse">
                   ✓ {msgSincronizado}
                 </span>
               )}
@@ -562,7 +562,7 @@ export default function Tab7Oficina() {
           </div>
 
           {/* Grid / Tabela de Componentes */}
-          <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-900/60 shadow-xl">
+          <div className="border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/60 shadow-sm">
             <div className="overflow-x-auto">
               <table className="sgm-table w-full text-xs">
                 <thead>
@@ -583,11 +583,11 @@ export default function Tab7Oficina() {
                         : 'Sem registro';
 
                       return (
-                        <tr key={comp.id} className="hover:bg-slate-800/50 border-b border-white/5 transition-colors">
+                        <tr key={comp.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-200 dark:border-white/5 transition-colors">
                           {/* Nome e Número */}
                           <td className="py-2.5 px-3 whitespace-nowrap">
-                            <div className="font-bold text-white text-sm">
-                              {comp.tipo} <span className="text-blue-400 font-mono font-black">Nº {comp.numero}</span>
+                            <div className="font-bold text-slate-900 dark:text-white text-sm">
+                              {comp.tipo} <span className="text-blue-600 dark:text-blue-400 font-mono font-black">Nº {comp.numero}</span>
                             </div>
                             <div className="text-[10px] text-slate-500 font-mono mt-0.5">
                               ID: {comp.id}
@@ -597,17 +597,17 @@ export default function Tab7Oficina() {
                           {/* Localização */}
                           <td className="py-2.5 px-3 text-center whitespace-nowrap">
                             {comp.localizacao === 'OFICINA_MANUTENCAO' && (
-                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                                 🛠️ Na Oficina (Em Manutenção)
                               </span>
                             )}
                             {comp.localizacao === 'OFICINA_RESERVA' && (
-                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-500/30">
                                 📦 Na Oficina (Pronta / Reserva)
                               </span>
                             )}
                             {comp.localizacao === 'SONDA' && (
-                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
                                 🏗️ Na Sonda {comp.sondaAtual || '-'}
                               </span>
                             )}
@@ -615,7 +615,7 @@ export default function Tab7Oficina() {
 
                           {/* Detalhe da Última Movimentação */}
                           <td className="py-2.5 px-3 max-w-[260px]">
-                            <div className="text-[11px] text-slate-300 font-medium truncate" title={ultimoEvento?.observacao || '-'}>
+                            <div className="text-[11px] text-slate-700 dark:text-slate-300 font-medium truncate" title={ultimoEvento?.observacao || '-'}>
                               {ultimoEvento?.observacao || 'Nenhuma movimentação detalhada'}
                             </div>
                             <div className="text-[10px] text-slate-500 mt-0.5">
@@ -625,7 +625,7 @@ export default function Tab7Oficina() {
 
                           {/* Total de Históricos */}
                           <td className="py-2.5 px-3 text-center">
-                            <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-slate-800 text-slate-300 border border-white/5">
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5">
                               {comp.historico?.length || 0} evento(s)
                             </span>
                           </td>
@@ -635,7 +635,7 @@ export default function Tab7Oficina() {
                             <button
                               type="button"
                               onClick={() => setModalHistorico({ aberto: true, componente: comp })}
-                              className="px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 mx-auto"
+                              className="px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 mx-auto"
                             >
                               <span>🕒</span> Ver Histórico
                             </button>

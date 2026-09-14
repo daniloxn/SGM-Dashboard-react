@@ -9,8 +9,8 @@ import { CHART_COLORS } from '../../lib/dataUtils';
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-slate-800 border border-white/10 rounded-xl px-4 py-3 shadow-xl text-sm">
-      <p className="font-semibold text-white mb-1">{label}</p>
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 shadow-xl text-sm">
+      <p className="font-semibold text-slate-900 dark:text-white mb-1">{label}</p>
       <p style={{ color: payload[0]?.color }}>O.S.: <strong>{payload[0]?.value}</strong></p>
     </div>
   );
@@ -96,13 +96,13 @@ export default function Tab5Mecanicos() {
   return (
     <div className="space-y-6 p-4 sm:p-6">
       {/* Filtros */}
-      <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-4 flex flex-wrap gap-4 items-center">
+      <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl p-4 flex flex-wrap gap-4 items-center shadow-sm">
         <div>
-          <label className="text-xs text-slate-500 mb-1 block">Mecânico</label>
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 block">Mecânico</label>
           <select
             value={selMec}
             onChange={e => setSelMec(e.target.value)}
-            className="bg-slate-900/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="GERAL">Ranking Geral da Equipe</option>
             {mecanicosUnicos.map(m => <option key={m} value={m}>{m}</option>)}
@@ -110,11 +110,11 @@ export default function Tab5Mecanicos() {
         </div>
 
         <div>
-          <label className="text-xs text-slate-500 mb-1 block">Mês de Referência</label>
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 block">Mês de Referência</label>
           <select
             value={selMes}
             onChange={e => setSelMes(e.target.value)}
-            className="bg-slate-900/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="TODOS">Todos os Meses</option>
             {ordemMeses.map(m => <option key={m} value={m}>{m}</option>)}
@@ -126,7 +126,7 @@ export default function Tab5Mecanicos() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Gráfico */}
         <div className="chart-box lg:col-span-7">
-          <h3 className="text-base font-semibold text-white mb-4">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">
             {selMec === 'GERAL' ? '🏆 Ranking de Atendimentos da Equipe' : `📈 Produtividade: ${selMec}`}
           </h3>
           {chartData.length > 0 ? (
@@ -154,7 +154,7 @@ export default function Tab5Mecanicos() {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-48 text-slate-600 text-sm">
+            <div className="flex items-center justify-center h-48 text-slate-500 dark:text-slate-600 text-sm">
               <p>Nenhum dado encontrado para os filtros.</p>
             </div>
           )}
@@ -162,7 +162,7 @@ export default function Tab5Mecanicos() {
 
         {/* Tabela de Equipamentos */}
         <div className="chart-box lg:col-span-5 flex flex-col">
-          <h3 className="text-base font-semibold text-white mb-3">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-3">
             🔩 Equipamentos Atendidos {selMec !== 'GERAL' ? `(${selMec})` : ''}
           </h3>
           <div className="overflow-y-auto max-h-[380px] pr-1">
@@ -178,11 +178,11 @@ export default function Tab5Mecanicos() {
                 {tabelaEquipamentos.length > 0 ? (
                   tabelaEquipamentos.map((item, idx) => (
                     <tr key={idx}>
-                      <td className="font-medium text-slate-200 truncate max-w-[180px]" title={item.equip}>
+                      <td className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[180px]" title={item.equip}>
                         {item.equip}
                       </td>
-                      <td className="text-right font-semibold text-blue-400">{item.count}</td>
-                      <td className="text-right text-slate-400">{item.pct}%</td>
+                      <td className="text-right font-semibold text-blue-600 dark:text-blue-400">{item.count}</td>
+                      <td className="text-right text-slate-600 dark:text-slate-400">{item.pct}%</td>
                     </tr>
                   ))
                 ) : (

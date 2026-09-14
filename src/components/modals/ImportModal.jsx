@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import useStore from '../../store/useStore';
 import { useFirestore } from '../../hooks/useFirestore';
 import { parseExcelWorkbook } from '../../lib/dataUtils';
+import { baixarModeloExcel } from '../../lib/templateExcel';
 
 export default function ImportModal({ open, onClose }) {
   const [step, setStep] = useState('preview'); // 'preview' | 'loading' | 'done'
@@ -117,6 +118,20 @@ export default function ImportModal({ open, onClose }) {
             <span className="text-xs text-slate-500 mt-1">Formatos suportados: .xlsx, .xls</span>
             <input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleFile} />
           </label>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5">
+            <span className="text-xs text-slate-600 dark:text-slate-400">
+              Não tem o modelo? Baixe a planilha padrão oficial:
+            </span>
+            <button
+              type="button"
+              onClick={baixarModeloExcel}
+              className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5 shrink-0"
+            >
+              <span>📥</span> Baixar Modelo Oficial (.xlsx)
+            </button>
+          </div>
+
           {error && <div className="text-red-600 dark:text-red-400 text-sm bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg px-4 py-3">⚠️ {error}</div>}
         </div>
       )}

@@ -77,9 +77,6 @@ export default function DashboardPage() {
       <Sidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onImport={() => setIsImportOpen(true)}
-        onManageMonths={() => setIsManageMonthsOpen(true)}
-        onExport={handleExport}
         mobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
@@ -162,7 +159,10 @@ export default function DashboardPage() {
             />
           )}
           {activeTab === 'config' && (
-            <TabConfiguracoes onOpenImport={() => setIsImportOpen(true)} />
+            <TabConfiguracoes
+              onOpenImport={() => setIsImportOpen(true)}
+              onManageMonths={() => setIsManageMonthsOpen(true)}
+            />
           )}
         </main>
       </div>
