@@ -4,7 +4,8 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell
 } from 'recharts';
 import useStore from '../../store/useStore';
-import { CHART_COLORS } from '../../lib/dataUtils';
+import { CHART_COLORS, limparNomeBase, limparNomeReal } from '../../lib/dataUtils';
+import HelpButton from '../ui/HelpButton';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -17,10 +18,11 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Tab5Mecanicos() {
-  const { bancoGeral, ordemMeses, mecanicosUnicos, relMecMes, relMecCompMes } = useStore();
+  const { bancoGeral, ordemMeses, mecanicosUnicos, relMecMes } = useStore();
 
   const [selMec, setSelMec] = useState('GERAL');
   const [selMes, setSelMes] = useState('TODOS');
+  const [modoVisualizacaoEquip, setModoVisualizacaoEquip] = useState('familia'); // 'familia' | 'tag'
 
   // Chart data
   const chartData = useMemo(() => {
@@ -46,52 +48,40 @@ export default function Tab5Mecanicos() {
     }
   }, [selMec, selMes, mecanicosUnicos, ordemMeses, relMecMes]);
 
-  // Tabela de equipamentos trabalhados
+  // Tabela de equipamentos trabalhados (agrupada por Família ou por Tag individual)
   const tabelaEquipamentos = useMemo(() => {
-    if (selMec === 'GERAL') {
-      // Top equipamentos geral no mês selecionado
-      const counts = {};
-      bancoGeral.forEach(r => {
-        if (selMes !== 'TODOS' && r['Aba_Origem'] !== selMes) return;
-        const comp = r['Componentes'] || r['COMPONENTES'] || 'N/A';
-        counts[comp] = (counts[comp] || 0) + 1;
-      });
-      const total = Object.values(counts).reduce((a, b) => a + b, 0);
-      return Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 15)
-        .map(([equip, count]) => ({
-          equip,
-          count,
-          pct: total > 0 ? ((count / total) * 100).toFixed(1) : 0
-        }));
-    } else {
-      // Equipamentos do mecânico selecionado
-      const counts = {};
-      if (selMes === 'TODOS') {
-        const mesesObj = relMecCompMes[selMec] || {};
-        Object.values(mesesObj).forEach(compMap => {
-          Object.entries(compMap).forEach(([comp, qtd]) => {
-            counts[comp] = (counts[comp] || 0) + qtd;
-          });
-        });
-      } else {
-        const compMap = relMecCompMes[selMec]?.[selMes] || {};
-        Object.entries(compMap).forEach(([comp, qtd]) => {
-          counts[comp] = (counts[comp] || 0) + qtd;
-        });
+    const counts = {};
+
+    bancoGeral.forEach(r => {
+      // Filtro de Mês
+      if (selMes !== 'TODOS' && r['Aba_Origem'] !== selMes) return;
+
+      // Filtro de Mecânico
+      if (selMec !== 'GERAL') {
+        const mec = String(r['Mecânico'] || r['MECANICO'] || '').toUpperCase().trim();
+        if (mec !== selMec && !mec.includes(selMec)) return;
       }
 
-      const total = Object.values(counts).reduce((a, b) => a + b, 0);
-      return Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .map(([equip, count]) => ({
-          equip,
-          count,
-          pct: total > 0 ? ((count / total) * 100).toFixed(1) : 0
-        }));
-    }
-  }, [selMec, selMes, bancoGeral, relMecCompMes]);
+      const rawComp = r['Componentes'] || r['COMPONENTES'] || '';
+      const equip = modoVisualizacaoEquip === 'familia'
+        ? limparNomeBase(rawComp)
+        : limparNomeReal(rawComp);
+
+      if (equip && equip !== 'NÃO INFORMADO') {
+        counts[equip] = (counts[equip] || 0) + 1;
+      }
+    });
+
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 20)
+      .map(([equip, count]) => ({
+        equip,
+        count,
+        pct: total > 0 ? ((count / total) * 100).toFixed(1) : 0
+      }));
+  }, [selMec, selMes, modoVisualizacaoEquip, bancoGeral]);
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
@@ -126,9 +116,18 @@ export default function Tab5Mecanicos() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Gráfico */}
         <div className="chart-box lg:col-span-7">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">
-            {selMec === 'GERAL' ? '🏆 Ranking de Atendimentos da Equipe' : `📈 Produtividade: ${selMec}`}
-          </h3>
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              {selMec === 'GERAL' ? '🏆 Ranking de Atendimentos da Equipe' : `📈 Produtividade: ${selMec}`}
+            </h3>
+            <HelpButton
+              title="Produtividade da Equipe de Mecânicos"
+              purpose="Avaliar a distribuição de carga de trabalho e o volume de ordens atendidas por profissional."
+              howItWorks="No modo geral, calcula o total de ordens atendidas por cada mecânico no período selecionado. Se você selecionar um mecânico específico no filtro superior, exibe sua curva de produtividade mês a mês."
+              whatToObserve="Desbalanceamento na divisão de tarefas ou sobrecarga crônica em determinados mecânicos especialistas."
+              tips="Selecione um profissional no filtro para ver em quais meses ele teve picos de chamados."
+            />
+          </div>
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={380}>
               <BarChart
@@ -162,14 +161,55 @@ export default function Tab5Mecanicos() {
 
         {/* Tabela de Equipamentos */}
         <div className="chart-box lg:col-span-5 flex flex-col">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-3">
-            🔩 Equipamentos Atendidos {selMec !== 'GERAL' ? `(${selMec})` : ''}
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3 pb-2 border-b border-slate-200 dark:border-white/5">
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-1.5 truncate">
+                <span>🔩</span>
+                <span>Equipamentos {selMec !== 'GERAL' ? `(${selMec})` : ''}</span>
+              </h3>
+              <HelpButton
+                title="Equipamentos Atendidos pelo Mecânico"
+                purpose="Mapear a especialidade técnica e os componentes mais manuseados por cada mecânico ou pela equipe inteira."
+                howItWorks="Conta a frequência de cada componente nas ordens registradas. O switch no canto superior permite agrupar os dados por Família (ex: Cabeçote, Motor) ou inspecionar por Tag individual da peça (ex: Cabeçote 01, Motor 02)."
+                whatToObserve="Se mecânicos específicos concentram manutenções de alta precisão ou se a equipe possui conhecimento distribuído para atender múltiplos tipos de equipamentos."
+                tips="Alterne entre 'Família' e 'Por Tag' no botão acima para ver o detalhamento fino de cada peça física."
+              />
+            </div>
+
+            {/* Switch Toggle: Família / Grupo vs Tag */}
+            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-200/80 dark:border-white/10">
+              <button
+                type="button"
+                onClick={() => setModoVisualizacaoEquip('familia')}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
+                  modoVisualizacaoEquip === 'familia'
+                    ? 'bg-white dark:bg-blue-600 text-blue-600 dark:text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title="Agrupar peças por Família / Grupo principal"
+              >
+                Família
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setModoVisualizacaoEquip('tag')}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
+                  modoVisualizacaoEquip === 'tag'
+                    ? 'bg-white dark:bg-blue-600 text-blue-600 dark:text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title="Visualizar por Tag individual da peça"
+              >
+                Por Tag
+              </button>
+            </div>
+          </div>
           <div className="overflow-y-auto max-h-[380px] pr-1">
             <table className="sgm-table">
               <thead>
                 <tr>
-                  <th>Equipamento</th>
+                  <th>{modoVisualizacaoEquip === 'familia' ? 'Família / Grupo' : 'Tag / Código da Peça'}</th>
                   <th className="text-right">Qtd</th>
                   <th className="text-right">%</th>
                 </tr>

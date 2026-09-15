@@ -7,6 +7,7 @@ import {
 import useStore from '../../store/useStore';
 import { CHART_COLORS, normalizarDataObj } from '../../lib/dataUtils';
 import Modal from '../ui/Modal';
+import HelpButton from '../ui/HelpButton';
 
 function KpiCard({ label, value, sublabel, icon, color = 'text-blue-400', onClick }) {
   return (
@@ -42,7 +43,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function Tab1Geral() {
   const [modalReincidencia, setModalReincidencia] = useState(false);
   const [mesFiltro, setMesFiltro] = useState('TODOS');
-  const [mostrarAlertas, setMostrarAlertas] = useState(false);
 
   const {
     bancoGeral = [],
@@ -52,8 +52,7 @@ export default function Tab1Geral() {
     mecanicosUnicos = [],
     falhasGeraisCount = {},
     relCompBaseMes = {},
-    reincidenciaKPIs,
-    alertasSemanais
+    reincidenciaKPIs
   } = useStore();
 
   // Gráfico de Evolução:
@@ -107,67 +106,10 @@ export default function Tab1Geral() {
 
   const taxaReinc = reincidenciaKPIs ? reincidenciaKPIs.taxaReincidencia : 0;
   const totalReinc = reincidenciaKPIs ? reincidenciaKPIs.totalReincidentes : 0;
-  const qtdAlertas = alertasSemanais ? alertasSemanais.alertas.length : 0;
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      {/* 1. Radar de Anomalias Semanal (Discreto e Opcional para não poluir a tela) */}
-      {/* 1. Radar de Anomalias Semanal (Discreto e Opcional para não poluir a tela) */}
-      {alertasSemanais && (
-        <div className="bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-white/5 rounded-2xl p-3.5 transition-all shadow-xs">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">{alertasSemanais.temAlertas ? '🚨' : '🛡️'}</span>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                  Radar Semanal de Anomalias
-                </span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold border ${alertasSemanais.temAlertas ? 'bg-red-50 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-500/30' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20'}`}>
-                  {alertasSemanais.temAlertas ? `${qtdAlertas} alerta(s)` : 'Operação Estável'}
-                </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:inline">
-                  ({alertasSemanais.periodoAtualStr})
-                </span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setMostrarAlertas(v => !v)}
-              className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-700/50 dark:hover:bg-slate-700 dark:text-slate-300 transition-colors font-medium flex items-center gap-1 shrink-0"
-            >
-              {mostrarAlertas ? 'Ocultar avisos ✕' : 'Ver avisos 👁️'}
-            </button>
-          </div>
-
-          {mostrarAlertas && (
-            <div className="mt-3 pt-3 border-t border-slate-200 dark:border-white/5">
-              {alertasSemanais.temAlertas ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                  {alertasSemanais.alertas.map((alerta, i) => (
-                    <div key={i} className="bg-slate-50 dark:bg-slate-900/80 rounded-xl p-3 border border-red-200 dark:border-red-500/20 space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-red-700 dark:text-red-300 uppercase tracking-wide">
-                          {alerta.tipo === 'componente' ? '⚙️ Peça:' : '🏗️ Sonda:'} {alerta.titulo}
-                        </span>
-                        <span className="text-[10px] bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 px-1.5 py-0.5 rounded font-bold">
-                          {alerta.aumentoPct > 0 ? `+${alerta.aumentoPct}%` : 'Pico'}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-700 dark:text-slate-300">{alerta.mensagem}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs text-slate-600 dark:text-slate-400 py-1">
-                  Nenhum aumento anômalo identificado nos últimos 7 dias.
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* 2. Grid de KPIs */}
+      {/* 1. Grid de KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard icon="📋" label="Total de O.S." value={bancoGeral.length} color="text-blue-500 dark:text-blue-400" />
         <KpiCard
@@ -182,7 +124,7 @@ export default function Tab1Geral() {
         <KpiCard icon="👷" label="Equipe de Mecânicos" value={mecanicosUnicos.length} color="text-purple-600 dark:text-purple-400" />
       </div>
 
-      {/* 3. Reincidência Detalhada */}
+      {/* 2. Reincidência Detalhada */}
       {reincidenciaKPIs && reincidenciaKPIs.topComponentesReincidentes.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-white/5 rounded-2xl p-4 space-y-3 shadow-xs">
@@ -235,16 +177,25 @@ export default function Tab1Geral() {
         </div>
       )}
 
-      {/* 4. Gráfico de Evolução (Mensal se 'TODOS' ou Diário se selecionar 1 mês) */}
+      {/* 3. Gráfico de Evolução (Mensal se 'TODOS' ou Diário se selecionar 1 mês) */}
       <div className="chart-box">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-            {mesFiltro === 'TODOS' ? (
-              '📈 Evolução Mensal de Ordens de Serviço'
-            ) : (
-              <>📅 Ocorrências por Dia no Mês — <span className="text-blue-600 dark:text-blue-400">{mesFiltro}</span></>
-            )}
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              {mesFiltro === 'TODOS' ? (
+                '📈 Evolução Mensal de Ordens de Serviço'
+              ) : (
+                <>📅 Ocorrências por Dia no Mês — <span className="text-blue-600 dark:text-blue-400">{mesFiltro}</span></>
+              )}
+            </h3>
+            <HelpButton
+              title="Evolução de Ordens de Serviço"
+              purpose="Acompanhar o volume total de chamados abertos ao longo do tempo para identificar tendências de aumento ou queda nas quebras."
+              howItWorks="No modo 'Todos os Meses', soma as ordens de serviço cadastradas mês a mês. Ao escolher um mês específico no seletor, transforma o gráfico em visão diária com o total de cada dia do mês."
+              whatToObserve="Picos súbitos em meses ou dias específicos. Se a linha estiver subindo continuamente, indica necessidade de reforço preventivo."
+              tips="Selecione um mês no menu ao lado para descobrir os dias exatos em que a oficina recebeu mais demandas."
+            />
+          </div>
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Visualizar:</span>
@@ -284,10 +235,18 @@ export default function Tab1Geral() {
         )}
       </div>
 
-      {/* 5. Top Falhas e Top Componentes */}
+      {/* 4. Top Falhas e Top Componentes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="chart-box">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">🔴 Top Tipos de Falhas</h3>
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">🔴 Top Tipos de Falhas</h3>
+            <HelpButton
+              title="Top Tipos de Falhas"
+              purpose="Identificar os modos de falha e sintomas mais recorrentes em toda a operação."
+              howItWorks="Varre a coluna 'falhas' de todas as ordens de serviço registradas e ranqueia as causas mais frequentes em ordem decrescente."
+              whatToObserve="Falhas repetitivas como desgaste excessivo, quebra por impacto ou vazamentos que possam justificar revisão de operação ou lubrificação."
+            />
+          </div>
           {topFalhas.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={topFalhas} layout="vertical">
@@ -302,7 +261,15 @@ export default function Tab1Geral() {
         </div>
 
         <div className="chart-box">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">🔩 Top Famílias de Componentes</h3>
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">🔩 Top Famílias de Componentes</h3>
+            <HelpButton
+              title="Top Famílias de Componentes"
+              purpose="Apontar quais categorias de equipamentos geram o maior volume absoluto de manutenções na frota."
+              howItWorks="Normaliza o nome dos equipamentos retirando numerações individuais e soma o volume total histórico por família base."
+              whatToObserve="Equipamentos críticos como Cabeçotes ou Motores no topo da lista sugerem itens prioritários para estoque de reserva e manutenção preventiva."
+            />
+          </div>
           {topComps.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={topComps} layout="vertical">

@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import useStore from '../../store/useStore';
 import MultiSelect from '../ui/MultiSelect';
+import HelpButton from '../ui/HelpButton';
 import { CHART_COLORS } from '../../lib/dataUtils';
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -53,6 +54,13 @@ export default function Tab3Familias() {
   const [selComp, setSelComp] = useState(['GERAL']);
   const [selFalhaComp, setSelFalhaComp] = useState(['GERAL']);
   const [selFalha, setSelFalha] = useState('TODOS');
+
+  // Ao alterar o filtro no Gráfico de Evolução, sincroniza automaticamente com a análise de falhas
+  function handleCompChange(novoComp) {
+    setSelComp(novoComp);
+    setSelFalhaComp(novoComp);
+    setSelFalha('TODOS');
+  }
 
   // Gráfico 1: Evolução temporal de família/tag selecionada
   const evolucaoData = useMemo(() => {
@@ -117,13 +125,12 @@ export default function Tab3Familias() {
     return Object.entries(fc).sort((a, b) => b[1] - a[1]).map(([f]) => f);
   }, [selFalhaComp, relCompBaseFalhaMes, relCompRealFalhaMes]);
 
-  // Chart 2 data: temporal evolution of specific failure across selected components
+  // Chart 2 data: ranking de falhas ou evolução temporal de falha específica
   const falhaData = useMemo(() => {
-    const isGeralComp = selFalhaComp.includes('GERAL') || selFalhaComp.length === 0;
     const isGeralFalha = selFalha === 'TODOS';
 
-    if (selFalhaComp.length <= 1 || isGeralComp) {
-      // Single comp or general: bar chart of top failures
+    // Se 'TODOS': exibe sempre o ranking de falhas (gráfico de barras) consolidado das famílias selecionadas
+    if (isGeralFalha) {
       const fc = {};
       selFalhaComp.forEach(v => {
         if (v === 'GERAL') {
@@ -154,7 +161,7 @@ export default function Tab3Familias() {
       };
     }
 
-    // Multi-comp + specific failure: line chart per comp over time
+    // Se uma falha específica foi selecionada (ex: 'DESGASTE'): exibe linha temporal comparativa
     return {
       type: 'line',
       data: ordemMeses.map(mes => {
@@ -164,11 +171,7 @@ export default function Tab3Familias() {
           if (v.startsWith('[FAMILIA_SGM]')) { key = v.replace('[FAMILIA_SGM] ', ''); label = key; source = relCompBaseFalhaMes; }
           else if (v.startsWith('[TAG_SGM]'))   { key = v.replace('[TAG_SGM] ', '');    label = key; source = relCompRealFalhaMes; }
           else return;
-          if (isGeralFalha) {
-            row[label] = source[key] ? Object.values(source[key]).reduce((s, mMap) => s + (mMap[mes] || 0), 0) : 0;
-          } else {
-            row[label] = source[key]?.[selFalha]?.[mes] || 0;
-          }
+          row[label] = source[key]?.[selFalha]?.[mes] || 0;
         });
         return row;
       }),
@@ -181,13 +184,21 @@ export default function Tab3Familias() {
       {/* Chart 1: Component evolution */}
       <div className="chart-box">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white">📈 Evolução por Família / Tag</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">📈 Evolução por Família / Tag</h3>
+            <HelpButton
+              title="Evolução Temporal de Peças e Tags"
+              purpose="Comparar o comportamento histórico de desgaste de famílias ou tags físicas ao longo de todos os meses."
+              howItWorks="Traça linhas mensais para cada componente selecionado no filtro. Por padrão, foca nas 10 famílias com maior volume de ordens."
+              whatToObserve="Peças cuja curva mantém tendência de alta constante ao longo dos trimestres ou quedas abruptas após troca de fornecedor ou melhoria de processo."
+            />
+          </div>
           <div className="w-full sm:w-72">
             <MultiSelect
               id="filtroCompEvolucao"
               options={componentOptions}
               selected={selComp}
-              onChange={setSelComp}
+              onChange={handleCompChange}
               defaultValue="GERAL"
               defaultLabel="Visão Geral (Top 10 Famílias)"
             />
@@ -212,7 +223,15 @@ export default function Tab3Familias() {
       <div className="chart-box">
         <div className="flex flex-col gap-3 mb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">🔴 Falhas por Família / Tag</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-white">🔴 Falhas por Família / Tag</h3>
+              <HelpButton
+                title="Distribuição de Falhas por Peça"
+                purpose="Descobrir o modo exato de dano (trinca, vazamento, desgaste) que afeta os componentes selecionados."
+                howItWorks="Quando 'Todas as Falhas' está ativo, mostra o ranking em barras dos defeitos mais incidentes. Se você selecionar um defeito específico no seletor abaixo, o gráfico vira linha temporal para comparar a curva desse defeito entre as peças."
+                whatToObserve="Defeito predominante de uma peça. Ex: se cabeçotes quebram 80% por vazamento, o foco da equipe de manutenção deve ser vedação e torque."
+              />
+            </div>
             <div className="w-full sm:w-72">
               <MultiSelect
                 id="filtroFalhaComp"

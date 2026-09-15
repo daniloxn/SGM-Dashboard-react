@@ -2,6 +2,7 @@
 import { useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
 import { normalizarSonda } from '../../lib/dataUtils';
+import HelpButton from '../ui/HelpButton';
 
 export default function Tab6Explorador({ onEdit, onDelete }) {
   const { bancoGeral } = useStore();
@@ -73,8 +74,17 @@ export default function Tab6Explorador({ onEdit, onDelete }) {
             </button>
           )}
         </div>
-        <div className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-          Exibindo <span className="text-slate-900 dark:text-white font-semibold">{registrosFiltrados.length}</span> registros de {bancoGeral.length}
+        <div className="flex items-center gap-3">
+          <div className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+            Exibindo <span className="text-slate-900 dark:text-white font-semibold">{registrosFiltrados.length}</span> registros de {bancoGeral.length}
+          </div>
+          <HelpButton
+            title="Explorador do Banco de Dados Geral"
+            purpose="Permitir busca full-text direta, auditoria linha por linha, edição rápida de campos e exclusão cirúrgica de ordens no Firestore."
+            howItWorks="Filtra a base inteira em tempo real conforme você digita qualquer termo (número de O.S., nome da peça, defeito, sonda ou mecânico) com paginação de 25 registros por página."
+            whatToObserve="Inconsistências em dados brutos (ex: nomes de peças digitados com erros ou sem sonda) que possam estar distorcendo gráficos de outras abas."
+            tips="Clique no ícone de lápis para corrigir campos ou na lixeira para remover uma O.S. duplicada da nuvem."
+          />
         </div>
       </div>
 

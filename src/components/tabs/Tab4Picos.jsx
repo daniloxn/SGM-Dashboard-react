@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import useStore from '../../store/useStore';
 import { normalizarDataObj, CHART_COLORS } from '../../lib/dataUtils';
+import HelpButton from '../ui/HelpButton';
 
 const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
@@ -69,7 +70,16 @@ export default function Tab4Picos() {
 
       {/* Daily chart */}
       <div className="chart-box">
-        <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">📊 Ocorrências por Dia (últimos 90 dias)</h3>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">📊 Ocorrências por Dia (últimos 90 dias)</h3>
+          <HelpButton
+            title="Levantamento de Picos Diários"
+            purpose="Mapear a sobrecarga diária na oficina e identificar picos críticos de quebra em datas específicas."
+            howItWorks="Agrupa o total de ordens de serviço por dia nos últimos 90 dias. Colore as barras por criticidade (vermelho: 5+ chamados, amarelo: 3 a 4 chamados, azul: até 2 chamados)."
+            whatToObserve="Dias atípicos com mais de 5 quebras simultâneas. Serve para investigar se houve eventos climáticos severos, problemas com lotes de insumos ou pico de produção em sondas."
+            tips="Use o seletor no topo da tela para filtrar um mês específico ou analisar todo o período."
+          />
+        </div>
         {dadosDias.length > 0 ? (
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={dadosDias}>
@@ -93,7 +103,16 @@ export default function Tab4Picos() {
 
       {/* Day of week */}
       <div className="chart-box">
-        <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">📆 Distribuição por Dia da Semana</h3>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">📆 Distribuição por Dia da Semana</h3>
+          <HelpButton
+            title="Distribuição por Dia da Semana"
+            purpose="Analisar em quais dias da semana ocorrem as maiores incidências de ordens de serviço."
+            howItWorks="Calcula o dia da semana (domingo a sábado) a partir da data de abertura de cada ordem e consolida os totais acumulados."
+            whatToObserve="Concentração de quebras em segundas-feiras (retorno de fim de semana) ou em dias específicos de troca de turno das equipes de sondagem."
+            tips="Ajuda a dimensionar a escala da equipe da oficina para ter mais mecânicos disponíveis nos dias mais movimentados."
+          />
+        </div>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={dadosSemana}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />

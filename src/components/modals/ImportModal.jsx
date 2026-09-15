@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import Modal from '../ui/Modal';
 import * as XLSX from 'xlsx';
 import useStore from '../../store/useStore';
@@ -15,15 +16,16 @@ export default function ImportModal({ open, onClose }) {
   const { ordemMeses, bancoGeral } = useStore();
   const { importarDados } = useFirestore();
 
-  function handleFile(e) {
-    const file = e.target.files[0];
+  const [isDragging, setIsDragging] = useState(false);
+  const [isDropped, setIsDropped] = useState(false);
+
+  function processFile(file) {
     if (!file) return;
 
     // Pentest security check: validate file size limit (max 25MB) to prevent memory exhaustion / DoS
     const MAX_FILE_SIZE = 25 * 1024 * 1024;
     if (file.size > MAX_FILE_SIZE) {
       setError('Arquivo muito grande. O limite máximo permitido é de 25 MB.');
-      e.target.value = '';
       return;
     }
 
@@ -31,7 +33,6 @@ export default function ImportModal({ open, onClose }) {
     const fileName = file.name.toLowerCase();
     if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
       setError('Formato inválido. Por favor, envie apenas arquivos .xlsx ou .xls.');
-      e.target.value = '';
       return;
     }
 
@@ -69,7 +70,47 @@ export default function ImportModal({ open, onClose }) {
       }
     };
     reader.readAsArrayBuffer(file);
+  }
+
+  function handleFileInput(e) {
+    const file = e.target.files[0];
+    if (file) {
+      processFile(file);
+    }
     e.target.value = '';
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) setIsDragging(true);
+  }
+
+  function handleDragEnter(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only deactivate if leaving the container boundaries
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setIsDragging(false);
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    setIsDropped(true);
+    setTimeout(() => setIsDropped(false), 800);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      processFile(files[0]);
+    }
   }
 
   async function confirmar() {
@@ -111,13 +152,72 @@ export default function ImportModal({ open, onClose }) {
             </span>
           </div>
 
-          <p className="text-slate-600 dark:text-slate-400 text-sm">Selecione o arquivo Excel (.xlsx, .xls) com as Ordens de Serviço.</p>
-          <label className="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-blue-400/40 dark:border-blue-500/30 rounded-xl hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5 cursor-pointer transition-all">
-            <span className="text-3xl mb-2">📂</span>
-            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">Clique para selecionar o arquivo</span>
-            <span className="text-xs text-slate-500 mt-1">Formatos suportados: .xlsx, .xls</span>
-            <input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleFile} />
-          </label>
+          <motion.div
+            animate={{
+              scale: isDropped ? [1, 0.97, 1.02, 1] : isDragging ? 1.02 : 1,
+              borderColor: isDropped ? '#10b981' : isDragging ? '#2563eb' : undefined,
+            }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`relative flex flex-col items-center justify-center w-full min-h-[170px] p-6 border-2 border-dashed rounded-2xl cursor-pointer transition-colors duration-200 select-none overflow-hidden ${
+              isDropped
+                ? 'border-emerald-500 bg-emerald-50/60 dark:bg-emerald-500/15 shadow-md shadow-emerald-500/10'
+                : isDragging
+                ? 'border-blue-500 bg-blue-50/80 dark:bg-blue-500/20 shadow-lg shadow-blue-500/15 ring-4 ring-blue-500/20'
+                : 'border-slate-300 dark:border-white/15 hover:border-blue-500/60 dark:hover:border-blue-400/50 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-blue-50/30 dark:hover:bg-blue-500/5'
+            }`}
+          >
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              onChange={handleFileInput}
+              title=""
+            />
+
+            <motion.div
+              animate={{
+                y: isDragging ? -6 : 0,
+                scale: isDropped ? [1, 1.25, 1] : isDragging ? 1.15 : 1,
+                rotate: isDropped ? [0, -10, 10, 0] : 0
+              }}
+              transition={{ duration: 0.3 }}
+              className="text-4xl mb-2.5 pointer-events-none select-none"
+            >
+              {isDropped ? '✨' : isDragging ? '📥' : '📂'}
+            </motion.div>
+
+            <div className="text-center pointer-events-none space-y-1">
+              <p className={`text-sm font-bold transition-colors ${
+                isDropped
+                  ? 'text-emerald-700 dark:text-emerald-300'
+                  : isDragging
+                  ? 'text-blue-600 dark:text-blue-400'
+                  : 'text-slate-800 dark:text-slate-200'
+              }`}>
+                {isDropped
+                  ? 'Arquivo solto! Lendo planilha...'
+                  : isDragging
+                  ? 'Solte a planilha aqui agora'
+                  : 'Arraste e solte sua planilha aqui'}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                ou <span className="text-blue-600 dark:text-blue-400 font-semibold underline underline-offset-2">clique para procurar</span> no computador
+              </p>
+            </div>
+
+            <div className="mt-3 flex items-center gap-2 pointer-events-none">
+              <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300/50 dark:border-white/10">
+                Formatos: .xlsx ou .xls
+              </span>
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-200/60 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400">
+                Máx 25 MB
+              </span>
+            </div>
+          </motion.div>
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5">
             <span className="text-xs text-slate-600 dark:text-slate-400">

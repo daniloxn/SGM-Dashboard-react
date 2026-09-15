@@ -4,6 +4,7 @@ import useStore from '../../store/useStore';
 import { useFirestore } from '../../hooks/useFirestore';
 import { normalizarDataObj } from '../../lib/dataUtils';
 import { baixarModeloExcel } from '../../lib/templateExcel';
+import HelpButton from '../ui/HelpButton';
 
 export default function TabConfiguracoes({ onOpenImport, onManageMonths }) {
   const [subAba, setSubAba] = useState('interface'); // 'interface' | 'planilhas'
@@ -136,9 +137,18 @@ export default function TabConfiguracoes({ onOpenImport, onManageMonths }) {
       {/* Header & Sub-nav */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-5">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <span>⚙️</span> Configurações Gerais do Sistema
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>⚙️</span> Configurações Gerais do Sistema
+            </h2>
+            <HelpButton
+              title="Configurações Gerais & Operações"
+              purpose="Centralizar personalizações de tema (claro/escuro), download da planilha modelo oficial e manipulação segura de dados no banco."
+              howItWorks="Subdividido em 'Personalização & Tema' (onde você alterna o modo de visualização) e 'Manipulação de Dados' (onde você baixa o modelo oficial .xlsx e realiza exclusões pontuais por data ou mês)."
+              whatToObserve="A exclusão por data específica é a forma mais segura de apagar registros lançados incorretamente em um dia sem perder todo o mês."
+              tips="Se você precisar importar planilhas no padrão correto, utilize o botão 'Baixar Modelo (.xlsx)' na sub-aba Manipulação de Dados."
+            />
+          </div>
           <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Central de personalização visual da interface e controle cirúrgico de dados.
           </p>

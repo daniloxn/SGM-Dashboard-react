@@ -6,6 +6,7 @@ import ParserWhatsAppModal from '../modals/ParserWhatsAppModal';
 import AssociarSodepModal from '../modals/AssociarSodepModal';
 import EditarOsOficinaModal from '../modals/EditarOsOficinaModal';
 import HistoricoComponenteModal from '../modals/HistoricoComponenteModal';
+import HelpButton from '../ui/HelpButton';
 
 export default function Tab7Oficina() {
   const { osOficinaList, componentesList } = useStore();
@@ -174,6 +175,13 @@ export default function Tab7Oficina() {
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-wide">
               Controle de O.S. Oficina & WhatsApp
             </h2>
+            <HelpButton
+              title="Controle de O.S. da Oficina & WhatsApp"
+              purpose="Fazer a triagem em tempo real das quebras comunicadas nos grupos de WhatsApp antes do fechamento oficial da O.S. no SODEP."
+              howItWorks="Extrai mensagens do WhatsApp via regex inteligente, cadastra a ordem com status 'aberta' e rastreia o ciclo físico da peça (quem saiu da sonda e quem entrou como reserva). Permite associar posteriormente a O.S. oficial do SODEP para fechamento automático."
+              whatToObserve="Peças paradas 'Aguardando Oficina' há muito tempo, componentes em reparo na bancada e histórico de movimentação de cada item entre sondas."
+              tips="Clique no botão '+ Lançar Mensagens WhatsApp' para colar comunicados de turno em lote sem precisar digitar manualmente."
+            />
           </div>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Triagem pré-SODEP das mensagens do WhatsApp, monitoramento de turnos e rastreabilidade contínua de peças.

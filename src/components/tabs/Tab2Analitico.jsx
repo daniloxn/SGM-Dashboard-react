@@ -7,6 +7,7 @@ import {
 import useStore from '../../store/useStore';
 import MultiSelect from '../ui/MultiSelect';
 import ModalDetalhesDia from '../modals/ModalDetalhesDia';
+import HelpButton from '../ui/HelpButton';
 import { limparNomeBase, limparNomeReal, normalizarSonda, normalizarDataObj, CHART_COLORS } from '../../lib/dataUtils';
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -316,20 +317,31 @@ export default function Tab2Analitico() {
       {/* 2. Gráfico Principal: Evolução das Famílias que Mais Danificam */}
       <div className="chart-box">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>📈</span>
-              {chartEvolucao.isDiario ? (
-                <>Evolução Diária das Famílias Mais Danificadas — <span className="text-blue-600 dark:text-blue-400">{chartEvolucao.mesNome}</span></>
-              ) : (
-                <>Evolução por Família de Componente ao Longo dos Meses</>
-              )}
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              {chartEvolucao.isDiario
-                ? 'Acompanhe as linhas por família ao longo de cada dia do mês para identificar peças subindo fora da curva'
-                : 'Traçado comparativo das famílias com maior volume de quebras em cada mês'}
-            </p>
+          <div className="flex items-start gap-2.5">
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>📈</span>
+                  {chartEvolucao.isDiario ? (
+                    <>Evolução Diária das Famílias Mais Danificadas — <span className="text-blue-600 dark:text-blue-400">{chartEvolucao.mesNome}</span></>
+                  ) : (
+                    <>Evolução por Família de Componente ao Longo dos Meses</>
+                  )}
+                </h3>
+                <HelpButton
+                  title="Painel Analítico de Famílias"
+                  purpose="Cruzar dados operacionais específicos (Mês, Sonda, Mecânico e Peça) para investigar a causa raiz de quebras concentradas."
+                  howItWorks="Filtra a base de dados pelas variáveis escolhidas nos seletores superiores e desenha as curvas das Top 6 famílias mais danificadas naquele recorte."
+                  whatToObserve="Se isolar apenas 1 mês, o gráfico vira dia a dia e permite clicar nos pontos para abrir a lista completa de ordens daquele dia. Útil para verificar se uma sonda quebrou peças em sequência por falha operacional."
+                  tips="Clique em qualquer ponto do gráfico diário para abrir a lista detalhada de chamados daquela data."
+                />
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                {chartEvolucao.isDiario
+                  ? 'Acompanhe as linhas por família ao longo de cada dia do mês para identificar peças subindo fora da curva'
+                  : 'Traçado comparativo das famílias com maior volume de quebras em cada mês'}
+              </p>
+            </div>
           </div>
 
           <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-md border border-slate-200 dark:border-white/10 self-start sm:self-auto shrink-0 font-medium">
